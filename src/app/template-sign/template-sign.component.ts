@@ -34,14 +34,16 @@ export class TemplateSignComponent implements OnInit {
      .then(
        res => {
         this._emitData(res)
-       }
+       },
+       err => alert(err.message)
      )
    } else {
     this.authService.SignUp(this.email.value, this.password.value)
     .then(
       res => {
         this._emitData(res)
-      }
+      },
+      err => alert(err.message)
     )
    }
   }

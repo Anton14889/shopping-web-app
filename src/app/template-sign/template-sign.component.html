@@ -40,7 +40,9 @@
 
             </div>
 
-            <button mat-raised-button color="primary" (click)='onSubmit()'>{{buttonValue}}</button>
+            <button mat-raised-button color="primary" (click)='onSubmit()'
+            [disabled]='!signForm.valid'
+            >{{buttonValue}}</button>
         </form>
            <div class="signup">
             <a routerLink='/{{router}}'>

@@ -20,6 +20,7 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
 import { HostDirective } from './template-shared/host.directive';
+import { AdminProductsComponent } from './admin-products/admin-products.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { HostDirective } from './template-shared/host.directive';
     HeaderComponent,
     TemplateSignComponent,
     HostDirective,
+    AdminProductsComponent,
 
   ],
   imports: [
@@ -44,7 +46,7 @@ import { HostDirective } from './template-shared/host.directive';
     MatToolbarModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
 
   ],
   providers: [AngularFirestore],

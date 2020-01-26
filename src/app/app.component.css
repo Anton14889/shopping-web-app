@@ -6,3 +6,7 @@
      position: absolute;
      bottom: 5px;
  }
+ footer {
+     margin: auto;
+     width: 1250px;
+ }
