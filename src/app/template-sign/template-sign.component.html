@@ -1,0 +1,52 @@
+<div class="container">
+    <div class="my__container">
+        <form [formGroup]='signForm'>
+            <div class="form-email">
+
+                <label for="email">
+                    Your email
+                </label>
+
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Email:" formControlName="email" id='email' type='email'>
+                </mat-form-field>
+
+                <div class="error" role="alert" *ngIf='email.errors?.required &&  (email.dirty || email.touched)'>
+                    Enter email
+                </div>
+
+                <div class="error" role="alert" *ngIf="email.errors?.email &&  (email.dirty || email.touched)">
+                    Incorrect email
+                </div>
+            </div>
+
+            <div class="form-password">
+
+                <label for="password">
+                    Your password
+                </label>
+
+                <mat-form-field class="full-width">
+                    <input matInput placeholder="Password:" formControlName="password" id='password' type='password'>
+                </mat-form-field>
+
+                <div class="error" role="alert" *ngIf='password.errors?.minlength'>
+                    Password at least 6 characters
+                </div>
+                <div class="error" role="alert"
+                    *ngIf='password.errors?.required &&  (password.dirty || password.touched)'>
+                    Enter password
+                </div>
+
+            </div>
+
+            <button mat-raised-button color="primary" (click)='onSubmit()'>{{buttonValue}}</button>
+        </form>
+           <div class="signup">
+            <a routerLink='/{{router}}'>
+                {{signMessage}}
+            </a>
+           </div>
+    </div>
+</div>
+

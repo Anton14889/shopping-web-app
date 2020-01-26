@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+        <h1>
+            SHOPPING WEB APP
+        </h1>
+        <span class="example-spacer"></span>
+        <span>
+            {{user}}
+        </span>
+    </mat-toolbar-row>
+</mat-toolbar>
+
+<div class="container">
+
+    <div class="row justify-content-center mt-4">
+
+        <div class="col text-center">
+            <a mat-raised-button>Products</a>
+        </div>
+        <div class="col text-center">
+            <a mat-raised-button>Favorite</a>
+        </div>
+        <div class="col text-center">
+            <a mat-raised-button>Cart</a>
+        </div>
+        <div class="col text-center">
+            <a mat-raised-button routerLink='/signIn'>Sign In/ Admin</a>
+        </div>
+
+    </div>
+
+</div>
+<div class="line-container">
+    <hr>
+</div>

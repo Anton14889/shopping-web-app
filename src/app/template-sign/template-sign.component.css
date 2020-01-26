@@ -1,0 +1,32 @@
+.full-width {
+    width: 100%;
+}
+.my__container {
+    width: 320px;
+    margin: 50px auto;
+}
+label {
+    margin: 0;
+    padding: 0;
+    font-size: 1.3em;
+    font-weight: 500;
+    cursor: pointer;
+}
+.form-email {
+    margin-bottom: 25px;
+}
+.form-password {
+    margin-bottom: 15px;
+}
+button {
+    width: 100%;
+    margin-top: 20px;
+}
+.error {
+    color: rgba(228, 61, 61, 0.829);
+    position: absolute;
+}
+.signup {
+    text-align: center;
+    margin-top: 35px;
+}
