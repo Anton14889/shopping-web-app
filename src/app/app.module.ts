@@ -8,6 +8,8 @@ import { AngularFireModule } from 'angularfire2';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
 
+import { AngularFireStorageModule } from '@angular/fire/storage';
+
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SigninComponent } from './signin/signin.component';
@@ -19,8 +21,19 @@ import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatInputModule} from '@angular/material/input';
+import {MatTableModule} from '@angular/material/table';
+import {MatPaginatorModule} from '@angular/material/paginator';
+
+
 import { HostDirective } from './template-shared/host.directive';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
+
+import { AdminModule } from './admin/admin.module';
+import { ProductsComponent } from './products/products.component';
+import { FavoriteComponent } from './favorite/favorite.component';
+import { CartComponent } from './cart/cart.component';
+import { AdminTableComponent } from './admin-table/admin-table.component';
+
 
 @NgModule({
   declarations: [
@@ -31,6 +44,10 @@ import { AdminProductsComponent } from './admin-products/admin-products.componen
     TemplateSignComponent,
     HostDirective,
     AdminProductsComponent,
+    ProductsComponent,
+    FavoriteComponent,
+    CartComponent,
+    AdminTableComponent,
 
   ],
   imports: [
@@ -39,14 +56,18 @@ import { AdminProductsComponent } from './admin-products/admin-products.componen
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    AdminModule,
     //firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
+    AngularFireStorageModule,
     //material
     MatToolbarModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatTableModule,
+    MatPaginatorModule
 
   ],
   providers: [AngularFirestore],

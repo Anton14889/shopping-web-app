@@ -4,8 +4,12 @@ import { DataService } from './services/data.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
+
+
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { AuthService } from './auth/auth.service';
 
 export interface Item { name: string; }
 
@@ -20,15 +24,19 @@ export class AppComponent implements OnInit {
 
   private itemsCollection: AngularFirestoreCollection<Item>;
   items: Observable<Item[]>;
+
   user;
+
+  routAdminUser = 'sign-in';
   constructor(
 
     private _data: DataService,
-    private afAuth: AngularFireAuth,
-    private afs: AngularFirestore,
-    private ref: ChangeDetectorRef,
-    public router: Router
-
+    private _auth: AuthService,
+    private _afAuth: AngularFireAuth,
+    private _afs: AngularFirestore,
+    private _ref: ChangeDetectorRef,
+    private _router: Router,
+  
   ) {
     _data.changeEmitted$.subscribe(
       dataServer => {
@@ -43,15 +51,28 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
 
-    this.afAuth.auth.onAuthStateChanged((user) => {
+    this._afAuth.auth.onAuthStateChanged((user) => {
       if (user) {
         this.user = user.email;
-        this.ref.detectChanges();
+        this._ref.detectChanges();
         console.log(user);
-        this.afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
+        this._afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
           data => {
+
             if (data.data()[this.user]) {
-                  return this.router.navigate(['admin']);
+              this._auth.login(data.data()[this.user]);
+              this.routAdminUser = 'admin';
+              
+               this._router.navigate(['admin'])
+               .then(
+                 next => {
+                 
+                 }
+               )
+               
+              // console.log(this._router.isActive('admin', false))
+              // console.log(this._router.url)
+              return
             }
           }
         )
@@ -61,16 +82,14 @@ export class AppComponent implements OnInit {
       }
 
     });
+
+
   }
 
 
-  // addItem(item: Item) {
-  //   this.itemsCollection.add(item);
-  // }
-
 
   isadmin() {
-    this.afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
+    this._afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
       data => {
         console.log(data.data());
         console.log(
@@ -83,7 +102,7 @@ export class AppComponent implements OnInit {
   }
 
   signOut() {
-    this.afAuth.auth.signOut().then(_ => {
+    this._afAuth.auth.signOut().then(_ => {
       console.log('signOut');
       this.user = '';
     }).catch(function (error) {

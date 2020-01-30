@@ -26,7 +26,7 @@ export class SignupComponent implements OnInit {
       }),
       buttonValue: 'Sign Up',
       signMessage: 'Already have an account? Sign In',
-      router: 'signIn'
+      rout: 'sign-in'
     })
    }
 
