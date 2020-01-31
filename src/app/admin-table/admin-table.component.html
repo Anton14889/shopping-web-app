@@ -1,14 +1,18 @@
 <div class="container">
-    <p>admin-table works!</p>
-
+    <p>admin-table works!</p>      
     <div class="filter__input">
         <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
         </mat-form-field>
         <button mat-stroked-button color="primary" class='add__button' (click)='modal = !modal'>Add item</button>
     </div>
-    <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="dataSource" matSort>
+
+    <ng-container *ngIf='!dataSource.data.length' >
+        <mat-spinner diameter='50' class='spiner'></mat-spinner>
+    </ng-container>
+    <div class="mat-elevation-z8" *ngIf='dataSource.data.length'>
+
+        <table mat-table [dataSource]="dataSource" matSort >
 
             <!-- ID Column -->
             <ng-container matColumnDef="id">
@@ -19,7 +23,7 @@
             <!-- image Column -->
             <ng-container matColumnDef="image">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> image </th>
-                <td mat-cell *matCellDef="let row"> <img src="{{row.imgURL}}"></td>
+                <td mat-cell *matCellDef="let row"> <img src="{{row?.imgURL}}"></td>
             </ng-container>
 
             <!-- price Column -->
@@ -42,12 +46,13 @@
 
             <ng-container matColumnDef="edit">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Edit </th>
-                <td mat-cell *matCellDef="let row"><button mat-stroked-button color="primary" (click)='onEdit(row)'>Edit</button></td>
+                <td mat-cell *matCellDef="let row"><button mat-stroked-button color="primary"
+                        (click)='edit(row)'>Edit</button></td>
             </ng-container>
 
             <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
-                <td mat-cell *matCellDef="let row"> <button mat-stroked-button color="warn">Delete</button> </td>
+                <td mat-cell *matCellDef="let row"> <button mat-stroked-button color="warn" (click)='delete(row)'>Delete</button> </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -99,18 +104,15 @@
                     </label>
 
                     <mat-form-field class="full-width">
-                        <input matInput placeholder="price:" formControlName="price" id='price'
-                            type='text'>
+                        <input matInput placeholder="price:" formControlName="price" id='price' type='text'>
                     </mat-form-field>
-                    <div class="error" role="alert"
-                        *ngIf='price.errors?.required &&  (price.dirty || price.touched)'>
+                    <div class="error" role="alert" *ngIf='price.errors?.required &&  (price.dirty || price.touched)'>
                         Enter price
                     </div>
-                    <div class="error" role="alert"
-                        *ngIf='price.errors?.pattern &&  (price.dirty || price.touched)'>
+                    <div class="error" role="alert" *ngIf='price.errors?.pattern &&  (price.dirty || price.touched)'>
                         Price must be a number
                     </div>
-                    
+
 
                 </div>
 
@@ -120,30 +122,32 @@
                         img
                     </label>
                     <br>
-                    <input placeholder="img:"  id='img' type='file' #file (change)='imgName()'>
+                    <input placeholder="img:" id='img' type='file' #file (change)='imgName()'>
 
                     <div class="error" role="alert" *ngIf='img.value == ""'>
                         Add image
                     </div>
 
                 </div>
-                
+
             </form>
-            <button mat-raised-button color="primary" (click)='[onSubmit(), upload(file)]'
-                class="mt-5"
-                [disabled]='(img.value == "") || !addProductForm.valid'
-               >Submit</button>
-            <button mat-raised-button color="primary" (click)='[onSubmit() ]'
-                class="mt-5"
-                
-               >Submit</button>
-         
-           
+
+            <ng-container *ngIf='!editButton'>
+                <button mat-raised-button color="primary" (click)='[onSubmit()]' class="mt-5"
+                [disabled]='(img.value == "") || !addProductForm.valid'>Submit</button>
+            </ng-container>
+
+            <ng-container *ngIf='editButton'>
+                <button mat-raised-button color="primary" (click)='[onEdit()]' class="mt-5">Submit</button>
+            </ng-container>
+            
+
+
         </div>
     </div>
 
 </ng-container>
-<ng-container *ngIf='!modal' >
+<ng-container *ngIf='!modal'>
     <div class="backdrop" (click)='modal = !modal'></div>
 </ng-container>
 

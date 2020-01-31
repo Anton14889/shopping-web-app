@@ -23,9 +23,9 @@ td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:la
 img {
   width: 50px;
 }
-
-
-
+.spiner {
+  margin: auto;
+}
 
 /* form */
 
