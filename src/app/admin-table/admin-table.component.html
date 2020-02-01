@@ -1,18 +1,24 @@
 <div class="container">
-    <p>admin-table works!</p>      
+
     <div class="filter__input">
         <mat-form-field>
             <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
         </mat-form-field>
-        <button mat-stroked-button color="primary" class='add__button' (click)='modal = !modal'>Add item</button>
+        <button mat-stroked-button color="primary" class='add__button' (click)='openSubmitForm()'>Add item</button>
     </div>
 
-    <ng-container *ngIf='!dataSource.data.length' >
-        <mat-spinner diameter='50' class='spiner'></mat-spinner>
+    <ng-container *ngIf='emptyData && !addedProduct'>
+        The list is empty. Add your product
     </ng-container>
+    <ng-container *ngIf='addedProduct'>
+        <div class='d-flex justify-content-center mt-3'>
+            <mat-spinner diameter='30'></mat-spinner>
+        </div>
+    </ng-container>
+ 
     <div class="mat-elevation-z8" *ngIf='dataSource.data.length'>
 
-        <table mat-table [dataSource]="dataSource" matSort >
+        <table mat-table [dataSource]="dataSource" matSort>
 
             <!-- ID Column -->
             <ng-container matColumnDef="id">
@@ -22,8 +28,22 @@
 
             <!-- image Column -->
             <ng-container matColumnDef="image">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> image </th>
-                <td mat-cell *matCellDef="let row"> <img src="{{row?.imgURL}}"></td>
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Image </th>
+                <td mat-cell *matCellDef="let row">
+
+                    <ng-container *ngIf='!row?.spinner'>
+                        <img src="{{row?.imgURL}}">
+                    </ng-container>
+
+                    <ng-container *ngIf='row?.spinner'>
+                        <mat-spinner diameter='20'></mat-spinner>
+                    </ng-container>
+                    <ng-container *ngIf='row?.imageError'>
+                        <span class='error'>
+                            {{row?.imageError}}
+                        </span>
+                    </ng-container>
+                </td>
             </ng-container>
 
             <!-- price Column -->
@@ -52,17 +72,18 @@
 
             <ng-container matColumnDef="delete">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Delete </th>
-                <td mat-cell *matCellDef="let row"> <button mat-stroked-button color="warn" (click)='delete(row)'>Delete</button> </td>
+                <td mat-cell *matCellDef="let row"> <button mat-stroked-button color="warn"
+                        (click)='delete(row)'>Delete</button> </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;">
             </tr>
         </table>
-
         <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
     </div>
 </div>
+
 
 <ng-container *ngIf='!modal'>
     <div class="my__container">
@@ -119,7 +140,7 @@
                 <div class="img__form">
 
                     <label for="img">
-                        img
+                        Add image
                     </label>
                     <br>
                     <input placeholder="img:" id='img' type='file' #file (change)='imgName()'>
@@ -133,14 +154,13 @@
             </form>
 
             <ng-container *ngIf='!editButton'>
-                <button mat-raised-button color="primary" (click)='[onSubmit()]' class="mt-5"
-                [disabled]='(img.value == "") || !addProductForm.valid'>Submit</button>
+                <button mat-raised-button color="primary" (click)='onSubmit()' class="mt-5"
+                    [disabled]='img.value == null || !addProductForm.valid '>Submit</button>
+            </ng-container>
+            <ng-container *ngIf='editButton'>
+                <button mat-raised-button color="primary" (click)='onEdit()' class="mt-5">Submit</button>
             </ng-container>
 
-            <ng-container *ngIf='editButton'>
-                <button mat-raised-button color="primary" (click)='[onEdit()]' class="mt-5">Submit</button>
-            </ng-container>
-            
 
 
         </div>
@@ -150,20 +170,3 @@
 <ng-container *ngIf='!modal'>
     <div class="backdrop" (click)='modal = !modal'></div>
 </ng-container>
-
-
-
-
-
-
-
-
-
-
-
-<!-- <input type="file" (change)="upload($event)" accept=".png,.jpg" />
-
-
-<div class="container" *ngIf="downloadURL | async; let url">
-    <img [src]="url" alt="Image from AngularFireStorage">
-  </div> -->

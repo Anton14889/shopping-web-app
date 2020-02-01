@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { delay, retry } from 'rxjs/operators';
 
 
 export interface DataDescripton {
@@ -21,20 +22,11 @@ export class UploadService {
     private _afs: AngularFirestore,
   ) { }
 
-  ff(){
-    this._afs.collection("products").doc("3")
-   .snapshotChanges().subscribe(
-     data => {
-      let x = data.payload.data()
-      console.log(x)
-     }
-   )
-
-
-  }
 
   tableList() {
-   return this._afs.collection("products").get()
+   return this._afs.collection("products").get().pipe(
+     delay(500)
+   )
   }
 
   deleteItem(productName: string){
@@ -43,7 +35,8 @@ export class UploadService {
 
   deleteIMG(id){
     this._afStorage.ref(`/images/${id}`)
-    .delete().subscribe(
+    .delete()
+    .subscribe(
       res => {
         console.log('DELETED')
       }, error => alert('ERROR delete image')
@@ -60,7 +53,7 @@ export class UploadService {
   }
 
   uploadImage(id, file) {
-    this._afStorage.upload(`/images/${id}`, file);
+    this._afStorage.upload(`/images/${id}`, file)
   }
 
   downloadImage(id) {
