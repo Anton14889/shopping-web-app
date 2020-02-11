@@ -87,7 +87,7 @@ export class AdminTableComponent implements OnInit {
     this._uploadService.addItem(this.name.value, data);
     this.upload(this.file.nativeElement.files[0]);
 
-    setTimeout(() => {/////////////////////////////
+    setTimeout(() => {
       this.allList();
       this.img.reset();
       this.addedProduct = false;
@@ -102,11 +102,6 @@ export class AdminTableComponent implements OnInit {
   }
 
   onEdit() {
-    
-    if (this.names[this.name.value]) {
-      return alert('Name already exists')
-    }
-    this.modal = !this.modal;
 
     let data = {
       name: this.name.value,
@@ -115,19 +110,35 @@ export class AdminTableComponent implements OnInit {
       price: +this.price.value,
       img: this.img.value,
     };
+
+
     //если новое имя и новая картинка или имя картинка и описание
     if (this.addProductForm.value.img != this.editObj['img'] && this.addProductForm.value.name != this.editObj['name']) {
-      return this.editImageEndName(data)
+      if (this.addProductForm.value.name != this.editObj['name']) {
+        // если новое имя существует
+        if (this.names[this.addProductForm.value.name]) {
+          return alert('Name already exist')
+        }
+        this.modal = !this.modal;
+        return this.editImageEndName(data)
+      }
+    }
+     //если новое имя
+     if (this.addProductForm.value.name != this.editObj['name']) {
+      if (this.names[this.addProductForm.value.name]) {
+        return alert('Name already exist')
+      }
+      this.modal = !this.modal;
+      return this.editname(data);
     }
     //если новая картинка
     if (this.addProductForm.value.img != this.editObj['img']) {
+      this.modal = !this.modal;
       return this.editImage(data);
     }
-    //если новое имя
-    if (this.addProductForm.value.name != this.editObj['name']) {
-      return this.editname(data);
-    }
-    this.editDescription(data)
+
+    this.modal = !this.modal;
+    return this.editDescription(data)
   }
 
   //сохраняем event обьект, переносим значения в форму
@@ -183,7 +194,7 @@ export class AdminTableComponent implements OnInit {
                   objData['imageError'] = 'error';
                   result.push(objData)
                   this.dataSource = new MatTableDataSource(result);
-                 
+
                 }
               )
           })

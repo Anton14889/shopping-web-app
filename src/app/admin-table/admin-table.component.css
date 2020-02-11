@@ -61,7 +61,7 @@ label {
 
 .error {
   color: rgba(228, 61, 61, 0.829);
-  position: absolute;
+  padding-left: 10px;
 }
 
 .backdrop {
@@ -74,3 +74,4 @@ label {
   opacity: .6;
   z-index: 1;
 }
+
