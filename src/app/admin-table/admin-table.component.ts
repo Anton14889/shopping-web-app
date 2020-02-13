@@ -52,6 +52,7 @@ export class AdminTableComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.allList();
+    
   }
 
   addProductForm = this.fb.group({

@@ -1,1 +1,7 @@
-<p>cart works!</p>
+<div class="container d-flex flex-wrap">
+    <ng-container *ngFor='let data of result'>
+        <app-card [button_Left]='"Delete"' [button_Right]='"Buy"' [data]='data' (buttonLeft)='delete(data)'
+            (buttonRight)='buy(data)'>
+        </app-card>
+    </ng-container>
+</div>

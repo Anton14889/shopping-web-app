@@ -24,16 +24,20 @@ import {MatInputModule} from '@angular/material/input';
 import {MatTableModule} from '@angular/material/table';
 import {MatPaginatorModule} from '@angular/material/paginator';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
-
+import {MatCardModule} from '@angular/material/card';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
+import {MatBadgeModule} from '@angular/material/badge';
 
 import { HostDirective } from './template-shared/host.directive';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
 
 import { AdminModule } from './admin/admin.module';
 import { ProductsComponent } from './products/products.component';
-import { FavoriteComponent } from './favorite/favorite.component';
-import { CartComponent } from './cart/cart.component';
+import { FavoriteComponent, BuyDialog1 } from './favorite/favorite.component';
+import { CartComponent, BuyDialog } from './cart/cart.component';
 import { AdminTableComponent } from './admin-table/admin-table.component';
+import { CardComponent } from './card/card.component';
 
 
 @NgModule({
@@ -49,6 +53,9 @@ import { AdminTableComponent } from './admin-table/admin-table.component';
     FavoriteComponent,
     CartComponent,
     AdminTableComponent,
+    CardComponent,
+    BuyDialog,
+    BuyDialog1
 
   ],
   imports: [
@@ -69,11 +76,16 @@ import { AdminTableComponent } from './admin-table/admin-table.component';
     MatInputModule,
     MatTableModule,
     MatPaginatorModule,
-    MatProgressSpinnerModule
-
+    MatProgressSpinnerModule,
+    MatCardModule,
+    MatSidenavModule,
+    MatDialogModule,
+    MatBadgeModule
   ],
-  providers: [AngularFirestore],
+  providers: [AngularFirestore,
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+  ],
   bootstrap: [AppComponent],
-  entryComponents: [ TemplateSignComponent ],
+  entryComponents: [ TemplateSignComponent, BuyDialog, BuyDialog1],
 })
 export class AppModule { }

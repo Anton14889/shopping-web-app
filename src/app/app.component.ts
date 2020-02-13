@@ -3,16 +3,15 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DataService } from './services/data.service';
 import { AngularFireAuth } from 'angularfire2/auth';
 
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
-
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
+import { CartService } from './user-services/cart.service';
+import { Data } from './services/data.model';
 
 export interface Item { name: string; }
-
 
 
 @Component({
@@ -25,7 +24,10 @@ export class AppComponent implements OnInit {
   private itemsCollection: AngularFirestoreCollection<Item>;
   items: Observable<Item[]>;
 
-  user;
+  user: Data = {
+    email: null,
+    isAdmin: false
+  };
 
   routAdminUser = 'sign-in';
   constructor(
@@ -36,75 +38,54 @@ export class AppComponent implements OnInit {
     private _afs: AngularFirestore,
     private _ref: ChangeDetectorRef,
     private _router: Router,
-  
-  ) {
-    _data.changeEmitted$.subscribe(
-      dataServer => {
-        this.user = dataServer.email;
-      });
+    private _cartService: CartService,
 
-    // this.itemsCollection = afs.collection<Item>('items');
-    // this.items = this.itemsCollection.valueChanges();
-
-  }
+  ) { }
 
 
   ngOnInit() {
+    this.auf();
+  }
 
+  auf() {
     this._afAuth.auth.onAuthStateChanged((user) => {
       if (user) {
-        this.user = user.email;
+        this.user.email = user.email;
+        this.user.isAdmin = false;
         this._ref.detectChanges();
-        console.log(user);
+        this._data.emitChange(this.user);
+        this._data.updateCartSize();
+
         this._afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
           data => {
 
-            if (data.data()[this.user]) {
-              this._auth.login(data.data()[this.user]);
+            if (data.data()[this.user.email]) {
+              this._auth.login(data.data()[this.user.email]);
               this.routAdminUser = 'admin';
-              
-               this._router.navigate(['admin'])
-               .then(
-                 next => {
-                 
-                 }
-               )
-               
-              // console.log(this._router.isActive('admin', false))
-              // console.log(this._router.url)
+              this.user.isAdmin = true;
+              setTimeout(() => {
+                this._router.navigate(['admin'])
+              }, 0);
               return
             }
           }
         )
-
       } else {
         console.log('НЕТ АУТЕНТИФИКАЦИИ')
+        this.routAdminUser = 'sign-in';
+        this._router.navigate(['/'])
       }
-
     });
-
-
   }
 
-
-
-  isadmin() {
-    this._afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
-      data => {
-        console.log(data.data());
-        console.log(
-          data.data()[this.user]
-
-        );
-      }
-    )
-    // console.log(this.user)
-  }
 
   signOut() {
     this._afAuth.auth.signOut().then(_ => {
       console.log('signOut');
-      this.user = '';
+      this.user = {
+        email: null,
+        isAdmin: false
+      };
     }).catch(function (error) {
       console.log(error)
     });

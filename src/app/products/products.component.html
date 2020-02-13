@@ -1,1 +1,44 @@
-<p>products works!</p>
+<div class="container">
+
+  <mat-drawer-container class="driver__container">
+    <mat-drawer mode="side" opened>
+
+
+      <div class='search'>
+        <mat-form-field appearance="legacy">
+          <mat-label>Search by name</mat-label>
+          <input matInput #inp (input)='search(inp.value)'>
+        </mat-form-field>
+      </div>
+      <div class='search'>
+        <mat-form-field appearance="legacy">
+          <mat-label>Minimum price</mat-label>
+          <input matInput #inpPriceMin (input)='searchByPrice(inpPriceMin.value, inpPriceMax.value)' value="0">
+        </mat-form-field>
+      </div>
+      <div class='search'>
+        <mat-form-field appearance="legacy">
+          <mat-label>Maximum price</mat-label>
+          <input matInput #inpPriceMax (input)='searchByPrice(inpPriceMin.value, inpPriceMax.value)' value="99999">
+        </mat-form-field>
+      </div>
+
+    </mat-drawer>
+    <mat-drawer-content>
+
+      <div class="d-flex flex-wrap">
+        <ng-container *ngFor='let data of searchArr'>
+          <app-card 
+          [data]='data' 
+          [button_Left]='"Add to favorites"'
+          [button_Right]='"Add to cart"'
+          (buttonRight)='addCart(data)'
+          (buttonLeft)='addFavorites(data)'
+          ></app-card>
+
+        </ng-container>
+      </div>
+
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>
