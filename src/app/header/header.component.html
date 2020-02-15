@@ -6,72 +6,61 @@
     </mat-toolbar-row>
 </mat-toolbar>
 
-<div class="container">
+<div class="container pt-4 m d-flex justify-content-beetwen flex-wrap">
 
-    <div class="row justify-content-center mt-4">
+    <div routerLink="/products" routerLinkActive #rlap="routerLinkActive">
+        <button mat-raised-button *ngIf='!rlap.isActive else nonactivep'>
+            Products
+        </button>
+        <ng-template #nonactivep>
+            <button mat-raised-button color="primary">Products</button>
+        </ng-template>
+    </div>
 
-        <div class="col text-center">
-            <div routerLink="/products" routerLinkActive #rlap="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlap.isActive else nonactivep'>
-                    Products
-                </button>
-                <ng-template #nonactivep>
-                    <button mat-raised-button color="primary">Products</button>
-                </ng-template>
-            </div>
-        </div>
+    <div routerLink="/favorite" routerLinkActive #rlaf="routerLinkActive">
+        <button mat-raised-button *ngIf='!rlaf.isActive; else nonactivef' matBadge="{{favoritSize}}"
+            matBadgePosition="after" matBadgeColor="accent">
+            Favorite
+        </button>
+        <ng-template #nonactivef>
+            <button mat-raised-button color="primary" matBadge="{{favoritSize}}" matBadgePosition="after"
+                matBadgeColor="accent">Favorite</button>
+        </ng-template>
+    </div>
 
-        <div class="col text-center">
-            <div routerLink="/favorite" routerLinkActive #rlaf="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlaf.isActive; else nonactivef' matBadge="{{favoritSize}}"
-                    matBadgePosition="after" matBadgeColor="accent">
-                    Favorite
-                </button>
-                <ng-template #nonactivef>
-                    <button mat-raised-button color="primary" matBadge="{{favoritSize}}" matBadgePosition="after"
-                        matBadgeColor="accent">Favorite</button>
-                </ng-template>
-            </div>
-        </div>
+    <div routerLink="/cart" routerLinkActive #rlac="routerLinkActive">
+        <button mat-raised-button *ngIf='!rlac.isActive; else nonactivec' matBadge="{{cartSize}}"
+            matBadgePosition="after" matBadgeColor="accent">
+            Cart
+        </button>
+        <ng-template #nonactivec>
+            <button mat-raised-button color="primary" matBadge="{{cartSize}}" matBadgePosition="after"
+                matBadgeColor="accent">
+                Cart
+            </button>
+        </ng-template>
+    </div>
 
-        <div class="col text-center">
-            <div routerLink="/cart" routerLinkActive #rlac="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlac.isActive; else nonactivec' matBadge="{{cartSize}}"
-                    matBadgePosition="after" matBadgeColor="accent">
-                    Cart
-                </button>
-                <ng-template #nonactivec>
-                    <button mat-raised-button color="primary" matBadge="{{cartSize}}" matBadgePosition="after"
-                        matBadgeColor="accent">
-                        Cart
-                    </button>
-                </ng-template>
-            </div>
-        </div>
-        <div class="col text-center">
-            <div routerLink="/{{routAdminUser}}" routerLinkActive #rlas="routerLinkActive">
-                <button mat-raised-button *ngIf=' !rlas.isActive; else nonactives' routerLinkActive="active">
-                    <ng-container *ngIf='user?.email'>
-                        {{user?.email}}
-                    </ng-container>
-                    <ng-container *ngIf='!user?.email'>
-                        Sign In
-                    </ng-container>
+    <div routerLink="/{{routAdminUser}}" routerLinkActive #rlas="routerLinkActive">
+        <button mat-raised-button *ngIf=' !rlas.isActive; else nonactives' routerLinkActive="active">
+            <ng-container *ngIf='user?.email'>
+                {{user?.email}}
+            </ng-container>
+            <ng-container *ngIf='!user?.email'>
+                Sign In
+            </ng-container>
 
-                </button>
-                <ng-template #nonactives>
-                    <button mat-raised-button color="primary">
-                        <ng-container *ngIf='user?.email'>
-                            {{user?.email}}
-                        </ng-container>
-                        <ng-container *ngIf='!user?.email'>
-                            Sign In
-                        </ng-container>
-                    </button>
-                </ng-template>
-            </div>
-        </div>
-
+        </button>
+        <ng-template #nonactives>
+            <button mat-raised-button color="primary">
+                <ng-container *ngIf='user?.email'>
+                    {{user?.email}}
+                </ng-container>
+                <ng-container *ngIf='!user?.email'>
+                    Sign In
+                </ng-container>
+            </button>
+        </ng-template>
     </div>
 
 </div>

@@ -1,9 +1,15 @@
-
-  button {
-    width: 100%;
-  }
-  .line-container {
-    max-width: 1250px;
-    margin: 0 auto;
-    text-align: center;
+ button {
+  width: 100%;
+   min-width: 200px;
+}
+.container div {
+  width: 20%;
+  min-width: 220px;
+  margin: auto;
+  margin-bottom: 15px;
+}
+.line-container {
+  max-width: 1250px;
+  margin: 0 auto;
+  text-align: center;
 }
