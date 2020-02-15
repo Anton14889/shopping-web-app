@@ -23,19 +23,21 @@
 
         <div class="col text-center">
             <div routerLink="/favorite" routerLinkActive #rlaf="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlaf.isActive; else nonactivef'>
+                <button mat-raised-button *ngIf='!rlaf.isActive; else nonactivef' matBadge="{{favoritSize}}"
+                    matBadgePosition="after" matBadgeColor="accent">
                     Favorite
                 </button>
                 <ng-template #nonactivef>
-                    <button mat-raised-button color="primary">Favorite</button>
+                    <button mat-raised-button color="primary" matBadge="{{favoritSize}}" matBadgePosition="after"
+                        matBadgeColor="accent">Favorite</button>
                 </ng-template>
             </div>
         </div>
 
         <div class="col text-center">
             <div routerLink="/cart" routerLinkActive #rlac="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlac.isActive; else nonactivec' matBadge="{{cartSize}}" matBadgePosition="after"
-                    matBadgeColor="accent">
+                <button mat-raised-button *ngIf='!rlac.isActive; else nonactivec' matBadge="{{cartSize}}"
+                    matBadgePosition="after" matBadgeColor="accent">
                     Cart
                 </button>
                 <ng-template #nonactivec>

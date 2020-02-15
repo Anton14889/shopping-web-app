@@ -1,30 +1,28 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { DataService } from '../services/data.service';
 import { FavoritesService } from '../user-services/favorites.service';
+import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 
 @Component({
   selector: 'app-favorite',
   templateUrl: './favorite.component.html',
   styleUrls: ['./favorite.component.css']
 })
-export class FavoriteComponent {
+export class FavoriteComponent implements OnInit {
 
   constructor(
     private _favoritService: FavoritesService,
     public dialog: MatDialog,
     private _data: DataService
-  ) {
-
-    _data.changeEmitted$.subscribe(
+  ) { }
+  ngOnInit() {
+    this._data.changeEmitted$.subscribe(
       dataServer => {
         this.user = dataServer;
-        this.allList()
-        setTimeout(() => {
-          console.log(
-            this.result
-          )
-        }, 3000);
+        if (this.user.favoritSize) {
+          this.allList()
+        }
       });
   }
 
@@ -34,11 +32,11 @@ export class FavoriteComponent {
   delete(data) {
     this._favoritService.deleteItem(this.user.email, data.name);
     this.allList();
-    this._data.updateCartSize()
+    this._data.updateFavoritSize()
   }
 
   buy(data) {
-    this.dialog.open(BuyDialog1, {
+    this.dialog.open(ModalBuyComponent, {
       data: {
         name: data.name
       }
@@ -47,7 +45,7 @@ export class FavoriteComponent {
 
   private allList() {
     let result = [];
-    const list = this._favoritService.tableList(this.user.email)
+    this._favoritService.tableList(this.user.email)
       .subscribe(
         data => {
           if (data.empty) {
@@ -61,27 +59,4 @@ export class FavoriteComponent {
       )
   }
 
-}
-@Component({
-  template: `
-  <h1 mat-dialog-title>
-  
-  Do you want to buy
-  <br>
-  {{data.name}} ?</h1>
-
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No</button>
-  <button mat-button cdkFocusInitial>Buy</button>
-</div>
-`
-})
-export class BuyDialog1 {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<BuyDialog1>,
-  ) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
-  }
 }

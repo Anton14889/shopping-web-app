@@ -6,6 +6,7 @@ import { AdminProductsComponent } from './admin-products/admin-products.componen
 import { ProductsComponent } from './products/products.component';
 import { FavoriteComponent } from './favorite/favorite.component';
 import { CartComponent } from './cart/cart.component';
+import { UserInfoComponent } from './user-info/user-info.component';
 
 
 const routes: Routes = [
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'products', component: ProductsComponent },
   { path: 'favorite', component: FavoriteComponent },
   { path: 'cart', component: CartComponent },
+  { path: 'user', component: UserInfoComponent },
 ];
 
 @NgModule({

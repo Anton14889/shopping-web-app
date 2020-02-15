@@ -2,3 +2,8 @@
   button {
     width: 100%;
   }
+  .line-container {
+    max-width: 1250px;
+    margin: 0 auto;
+    text-align: center;
+}

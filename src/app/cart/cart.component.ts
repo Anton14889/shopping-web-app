@@ -1,25 +1,29 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CartService } from '../user-services/cart.service';
 import { DataService } from '../services/data.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 
 @Component({
   selector: 'app-cart',
   templateUrl: './cart.component.html',
   styleUrls: ['./cart.component.css']
 })
-export class CartComponent {
+export class CartComponent implements OnInit {
 
   constructor(
     private _cartService: CartService,
     public dialog: MatDialog,
     private _data: DataService
-  ) {
+  ) {}
 
-    _data.changeEmitted$.subscribe(
+  ngOnInit() {
+    this. _data.changeEmitted$.subscribe(
       dataServer => {
         this.user = dataServer;
-        this.allList()
+        if (this.user.cartSize) {
+          this.allList()
+        }
       });
   }
 
@@ -33,7 +37,7 @@ export class CartComponent {
   }
 
   buy(data) {
-    this.dialog.open(BuyDialog, {
+    this.dialog.open(ModalBuyComponent, {
       data: {
         name: data.name
       }
@@ -54,31 +58,5 @@ export class CartComponent {
           })
         }, e => console.warn("tableList error")
       )
-  }
-}
-
-
-
-@Component({
-  template: `
-  <h1 mat-dialog-title>
-  
-  Do you want to buy
-  <br>
-  {{data.name}} ?</h1>
-
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No</button>
-  <button mat-button cdkFocusInitial>Buy</button>
-</div>
-`
-})
-export class BuyDialog {
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<BuyDialog>,
-  ) { }
-
-  onNoClick(): void {
-    this.dialogRef.close();
   }
 }

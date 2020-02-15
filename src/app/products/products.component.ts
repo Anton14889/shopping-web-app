@@ -14,17 +14,18 @@ export class ProductsComponent implements OnInit {
   private result = [];
   searchArr = [];
   user: Data;
-  
+
   constructor(
     private _uploadService: UploadService,
     private _cartService: CartService,
     private _favoritesService: FavoritesService,
     private _data: DataService
   ) {
-    _data.changeEmitted$.subscribe(
+    this._data.changeEmitted$.subscribe(
       (dataServer: Data) => {
         this.user = dataServer;
-      });
+      })
+    
   }
 
   ngOnInit() {
@@ -32,12 +33,12 @@ export class ProductsComponent implements OnInit {
   }
 
   addFavorites(data) {
-    this._favoritesService.addItem(this.user.email, data.name, data)
-    this._data.updateCartSize()
+    this._favoritesService.addItem(this.user.email, data.name, data);
+    this._data.updateFavoritSize();
   }
   addCart(data) {
-    this._cartService.addItem(this.user.email, data.name, data)
-    this._data.updateCartSize()
+    this._cartService.addItem(this.user.email, data.name, data);
+    this._data.updateCartSize();
   }
 
   searchByPrice(min, max) {
@@ -74,7 +75,7 @@ export class ProductsComponent implements OnInit {
     let result = [];
     let objData = {};
 
-    const list = this._uploadService.tableList()
+    this._uploadService.tableList()
       .subscribe(
         data => {
 

@@ -1,0 +1,14 @@
+<div class="container">
+   <ul>
+       <li>email: {{user.email}}</li>
+       <li>displayName: {{user.displayName}}</li>
+       <li>photoURL: {{user.photoURL}}</li>
+       <li>emailVerified: {{user.emailVerified}}</li>
+       <li>phoneNumber: {{user.phoneNumber}}</li>
+   </ul>
+</div>
+<div class="container">
+    <button mat-raised-button
+        (click)='signOut()'
+    >Exit</button>
+</div>

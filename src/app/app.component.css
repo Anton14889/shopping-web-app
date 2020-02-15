@@ -1,12 +1,14 @@
-/* .line-container hr {
-    margin-bottom: 2px;
+.line-container {
+    text-align: center;
+    z-index: 200;
+    background: #fff;
+}
+.line-container hr {
+    margin: 0 0 2px 0!important
  }
 .line-container {
-     width: 100%;
-     position: absolute;
-     bottom: 5px;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
  }
- footer {
-     margin: auto;
-     width: 1250px;
- } */
+

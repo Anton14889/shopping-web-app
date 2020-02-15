@@ -1,6 +1,7 @@
 import { ReplaySubject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { CartService } from '../user-services/cart.service';
+import { FavoritesService } from '../user-services/favorites.service';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,8 @@ import { CartService } from '../user-services/cart.service';
 export class DataService {
 
   constructor(
-    private _cartService: CartService
+    private _cartService: CartService,
+    private _favoritesService: FavoritesService
   ) { }
   data: any;
 
@@ -21,18 +23,29 @@ export class DataService {
   }
 
   updateCartSize() {
+    this.updateSize(this._cartService, 'cartSize')
+  }
+
+  updateFavoritSize() {
+    this.updateSize(this._favoritesService, 'favoritSize')
+  }
+
+  private updateSize(service, sizeType) {
     this.emitChangeSource.subscribe(
       d => this.data = d
     ).unsubscribe();
-    const list = this._cartService.tableList(this.data.email)
-      .subscribe(
-        data => {
-          data.empty ? this.data.cartItems = null : this.data.cartItems = data.size;
-         
-          this.emitChange(this.data)
-        }
-      )
+
+    setTimeout(() => {
+      service.tableList(this.data.email)
+        .subscribe(
+          data => {
+            data.empty ? this.data[sizeType] = null : this.data[sizeType] = data.size;
+            this.emitChange(this.data)
+          }
+        )
+    }, 500);
   }
+
 
 
 

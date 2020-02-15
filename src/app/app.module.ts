@@ -34,10 +34,12 @@ import { AdminProductsComponent } from './admin-products/admin-products.componen
 
 import { AdminModule } from './admin/admin.module';
 import { ProductsComponent } from './products/products.component';
-import { FavoriteComponent, BuyDialog1 } from './favorite/favorite.component';
-import { CartComponent, BuyDialog } from './cart/cart.component';
+import { FavoriteComponent } from './favorite/favorite.component';
+import { CartComponent } from './cart/cart.component';
 import { AdminTableComponent } from './admin-table/admin-table.component';
 import { CardComponent } from './card/card.component';
+import { ModalBuyComponent } from './modal-buy/modal-buy.component';
+import { UserInfoComponent } from './user-info/user-info.component';
 
 
 @NgModule({
@@ -54,8 +56,8 @@ import { CardComponent } from './card/card.component';
     CartComponent,
     AdminTableComponent,
     CardComponent,
-    BuyDialog,
-    BuyDialog1
+    ModalBuyComponent,
+    UserInfoComponent
 
   ],
   imports: [
@@ -86,6 +88,6 @@ import { CardComponent } from './card/card.component';
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ TemplateSignComponent, BuyDialog, BuyDialog1],
+  entryComponents: [ TemplateSignComponent, ModalBuyComponent ],
 })
 export class AppModule { }

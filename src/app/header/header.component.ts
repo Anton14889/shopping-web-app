@@ -12,12 +12,14 @@ export class HeaderComponent {
  @Input() user;
  @Input() routAdminUser;
  cartSize: Number;
+ favoritSize: Number;
 
  constructor(_data: DataService
   ) {
     _data.changeEmitted$.subscribe(
      (dataServer: Data) => {
-        this.cartSize = dataServer.cartItems;
+        this.cartSize = dataServer.cartSize;
+        this.favoritSize = dataServer.favoritSize;
       });
   }
   
