@@ -1,6 +1,6 @@
 export interface Data {
   email: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
   cartSize?: number;
   favoritSize?: number;
   user?: {

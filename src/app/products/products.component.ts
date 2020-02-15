@@ -13,23 +13,26 @@ import { FavoritesService } from '../user-services/favorites.service';
 export class ProductsComponent implements OnInit {
   private result = [];
   searchArr = [];
-  user: Data;
+  user: Data = {
+    email: null
+  };
 
   constructor(
     private _uploadService: UploadService,
     private _cartService: CartService,
     private _favoritesService: FavoritesService,
     private _data: DataService
-  ) {
-    this._data.changeEmitted$.subscribe(
-      (dataServer: Data) => {
-        this.user = dataServer;
-      })
-    
-  }
+  ) { }
 
   ngOnInit() {
-    this.allList()
+    this._data.changeEmitted$.subscribe(
+      (dataServer: Data) => {
+        if (this.user.email != dataServer['email']) {
+          this.user.email = dataServer.email;
+          this.allList()
+        }
+      })
+    
   }
 
   addFavorites(data) {
@@ -102,7 +105,7 @@ export class ProductsComponent implements OnInit {
           })
 
         }, e => console.warn("tableList error")
-      );
+      )
   }
 
 }

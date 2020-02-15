@@ -24,16 +24,7 @@ export class AppComponent implements OnInit {
 
   user: Data = {
     email: null,
-    isAdmin: null,
-    cartSize: null,
-    favoritSize: null,
-    user: {
-      displayName: null,
-      photoURL: null,
-      email: null,
-      emailVerified: null,
-      phoneNumber: null,
-    }
+    isAdmin: null
   };
 
   routAdminUser = 'sign-in';
@@ -109,43 +100,6 @@ export class AppComponent implements OnInit {
       console.log(error)
     });
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  // registerForm =  new FormGroup({
-  //   email: new FormControl('', Validators.required),
-  //   password: new FormControl('',Validators.required)
-  // })
-  // errorMessage;
-  // successMessage;
-
-  // tryRegister(value){
-  //   this.authService.SignUp(value)
-  //   .then(res => {
-  //     console.log(res);
-  //     this.errorMessage = "";
-  //     this.successMessage = "Your account has been created";
-  //   }, err => {
-  //     console.log(err);
-  //     this.errorMessage = err.message;
-  //     this.successMessage = "";
-  //   })
-  // }
-
-
 
 
 }
