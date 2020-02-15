@@ -1,8 +1,8 @@
 <div class="container mb-5">
-
+  <button mat-button (click)="sidenav.toggle()">sidenav.toggle()</button>
   <mat-drawer-container class="driver__container">
-    <mat-drawer mode="side" opened>
-
+    <mat-drawer mode="side" opened  #sidenav>
+      
 
       <div class='search'>
         <mat-form-field appearance="legacy">

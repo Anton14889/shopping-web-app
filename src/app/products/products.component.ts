@@ -11,11 +11,6 @@ import { FavoritesService } from '../user-services/favorites.service';
   styleUrls: ['./products.component.css']
 })
 export class ProductsComponent implements OnInit {
-  private result = [];
-  searchArr = [];
-  user: Data = {
-    email: null
-  };
 
   constructor(
     private _uploadService: UploadService,
@@ -23,7 +18,13 @@ export class ProductsComponent implements OnInit {
     private _favoritesService: FavoritesService,
     private _data: DataService
   ) { }
-
+  
+  private result = [];
+  searchArr = [];
+  user: Data = {
+    email: null
+  };
+  opened: boolean;
   ngOnInit() {
     this._data.changeEmitted$.subscribe(
       (dataServer: Data) => {
