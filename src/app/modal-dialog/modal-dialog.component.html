@@ -1,0 +1,78 @@
+
+        <div class="form__container d-flex justify-content-center flex-column">
+            <form [formGroup]='addProductForm'>
+                <div class="name__form mb-4">
+                    <label for="name">
+                        Name product
+                    </label>
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="Name:" formControlName="name" id='name' type='text'>
+                        <mat-error *ngIf='name.errors?.required && (name.dirty || name.touched)'>
+                            Enter name
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="description__form mb-4">
+
+                    <label for="description">
+                        Description
+                    </label>
+
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="description:" formControlName="description" id='description'
+                            type='text'>
+                        <mat-error *ngIf='description.errors?.required &&  (description.dirty || description.touched)'>
+                            Enter description
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+                <div class="price__form mb-4">
+
+                    <label for="price">
+                        Price
+                    </label>
+
+                    <mat-form-field class="full-width">
+                        <input matInput placeholder="price:" formControlName="price" id='price' type='text'>
+                        <mat-error>
+                            <span *ngIf='price.errors?.required &&  (price.dirty || price.touched)'>
+                                Enter price
+                            </span>
+                            <span *ngIf='price.errors?.pattern &&  (price.dirty || price.touched)'>
+                                Price must be a number
+                            </span>
+                        </mat-error>
+                    </mat-form-field>
+
+                </div>
+
+                <div class="img__form">
+
+                    <label for="img">
+                        Add image
+                    </label>
+                    <br>
+                    <input placeholder="img:" id='img' type='file' #file (change)='imgName()'>
+                    <mat-error *ngIf='img.value == null'>
+                        Add image
+                    </mat-error>
+                </div>
+
+            </form>
+
+            <ng-container *ngIf='!editButton'>
+                <button mat-raised-button color="primary" (click)='onSubmit()' class="mt-5"
+                    [disabled]='img.value == null || !addProductForm.valid '>Submit</button>
+            </ng-container>
+            <ng-container *ngIf='editButton'>
+                <button mat-raised-button color="primary" (click)='onEdit()' class="mt-5">Submit</button>
+            </ng-container>
+
+            <button mat-raised-button (click)='closeDialog()' class="mt-4">Close</button>
+
+        </div>
+ 
+
+

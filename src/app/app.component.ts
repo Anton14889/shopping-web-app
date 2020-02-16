@@ -29,12 +29,12 @@ export class AppComponent implements OnInit {
 
   routAdminUser = 'sign-in';
   constructor(
-    private _data: DataService,
-    private _auth: AuthService,
-    private _afAuth: AngularFireAuth,
-    private _afs: AngularFirestore,
-    private _ref: ChangeDetectorRef,
-    private _router: Router,
+    private data: DataService,
+    private auth: AuthService,
+    private afAuth: AngularFireAuth,
+    private afs: AngularFirestore,
+    private ref: ChangeDetectorRef,
+    private router: Router,
   ) { }
 
 
@@ -43,7 +43,7 @@ export class AppComponent implements OnInit {
   }
 
   auf() {
-    this._afAuth.auth.onAuthStateChanged((user) => {
+    this.afAuth.auth.onAuthStateChanged((user) => {
       if (user) {
         this.user.email = user.email;
         this.user.isAdmin = false;
@@ -54,25 +54,26 @@ export class AppComponent implements OnInit {
           emailVerified: user.emailVerified,
           phoneNumber: user.phoneNumber,
         }
-        this._ref.detectChanges();
-        this._data.emitChange(this.user);
-        this._data.updateCartSize();
-        this._data.updateFavoritSize();
+        this.ref.detectChanges();
+        this.data.emitChange(this.user);
+        this.data.updateCartSize();
+        this.data.updateFavoritSize();
 
-        this._afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
+        this.afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
           data => {
 
             if (data.data()[this.user.email]) {
-              this._auth.login(data.data()[this.user.email]);
+              this.auth.login(data.data()[this.user.email]);
               this.routAdminUser = 'admin';
               this.user.isAdmin = true;
               setTimeout(() => {
-                this._router.navigate(['admin'])
+                // this.router.navigate(['admin'])
+                this.router.navigate(['products'])
               }, 0);
               return
             }
             this.routAdminUser = 'user';
-            this._router.navigate(['products'])
+            this.router.navigate(['products'])
             return
           }
         )
@@ -81,20 +82,20 @@ export class AppComponent implements OnInit {
         this.user = {
           email: null,
           isAdmin: false,
-        };
-        this._data.emitChange({
           favoritSize: null,
           cartSize: null
-        });
+        };
+        this.data.emitChange(this.user);
+       
         this.routAdminUser = 'sign-in';
-        this._router.navigate(['/'])
+        this.router.navigate(['/'])
       }
     });
   }
 
 
   signOut() {
-    this._afAuth.auth.signOut().then(_ => {
+    this.afAuth.auth.signOut().then(_ => {
       console.log('signOut');
     }).catch(function (error) {
       console.log(error)

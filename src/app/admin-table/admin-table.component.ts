@@ -1,9 +1,12 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { UploadService } from '../upload-service/upload.service';
-import { FormBuilder, Validators } from '@angular/forms';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { MatDialog } from '@angular/material/dialog';
+import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
+import { AdminMobileEditComponent } from '../admin-mobile-edit/admin-mobile-edit.component';
 
 export interface UserData {
   id: string;
@@ -23,152 +26,114 @@ export interface UserData {
 
 export class AdminTableComponent implements OnInit {
 
-  displayedColumns: string[] = ['id', 'image', 'name', 'description', 'price', 'edit', 'delete'];
+  displayedColumns: string[] = ['id', 'image', 'name', 'description', 'price', 'edit'];
   dataSource: MatTableDataSource<UserData>;
 
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  @ViewChild('file', { static: false }) file: ElementRef;
-
-  constructor(private _uploadService: UploadService,
-    private fb: FormBuilder
-  ) {
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource([
-    ]);
-  }
 
   private id = -1;
   private names = {};
-  private editObj = {};
-  private saveIMGid = null;
+  editObj = {};
+
 
   modal = true;
   editButton = false;
   emptyData = false;
   addedProduct = false;
 
+  mobileQuery: MediaQueryList;
+  private mobileQueryListener: () => void;
+
+  constructor(
+    private uploadService: UploadService,
+    media: MediaMatcher,
+    public dialog: MatDialog,
+  ) {
+    this.dataSource = new MatTableDataSource([]);
+    this.mobileQuery = media.matchMedia('(max-width: 768px)');
+    this.mobileQueryListener = () => {
+      this.displayedColumns.length === 4 ? this.displayedColumns = ['id', 'image', 'name', 'description', 'price', 'edit'] : this.displayedColumns = ['id', 'image', 'name', 'info/edit'];
+    };
+    this.mobileQuery.addListener(this.mobileQueryListener);
+  }
+
+
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
     this.allList();
-    
-  }
-
-  addProductForm = this.fb.group({
-    name: ['', Validators.required],
-    description: ['', Validators.required],
-    price: ['', [Validators.pattern('^[0-9]+$'), Validators.required]],
-    img: ['']
-  })
-
-
-
-  get name() { return this.addProductForm.get('name'); }
-  get description() { return this.addProductForm.get('description'); }
-  get price() { return this.addProductForm.get('price'); }
-  get img() { return this.addProductForm.get('img'); }
-
-
-
-  onSubmit() {
-    //нельзя добавить новый продукт с существующим именем
-    if (this.names[this.name.value]) {
-      return alert('Name already exists')
+    if (document.documentElement.clientWidth <= 768) {
+      this.displayedColumns = ['id', 'image', 'name', 'info/edit'];
     }
-    this.addedProduct = true;
-    let data = {
-      name: this.name.value,
-      id: +this.id + 1,
-      description: this.description.value,
-      price: +this.price.value,
-      img: this.img.value,
-    };
-
-    this._uploadService.addItem(this.name.value, data);
-    this.upload(this.file.nativeElement.files[0]);
-
-    setTimeout(() => {
-      this.allList();
-      this.img.reset();
-      this.addedProduct = false;
-    }, 1500);
-    this.modal = !this.modal;
   }
 
+
+  ngOnDestroy(): void {
+    this.mobileQuery.removeListener(this.mobileQueryListener);
+  }
   openSubmitForm() {
-    this.addProductForm.reset();
-    this.modal = !this.modal;
-    this.editButton = false;
-  }
 
-  onEdit() {
-
-    let data = {
-      name: this.name.value,
-      id: this.editObj['id'],
-      description: this.description.value,
-      price: +this.price.value,
-      img: this.img.value,
-    };
-
-
-    //если новое имя и новая картинка или имя картинка и описание
-    if (this.addProductForm.value.img != this.editObj['img'] && this.addProductForm.value.name != this.editObj['name']) {
-      if (this.addProductForm.value.name != this.editObj['name']) {
-        // если новое имя существует
-        if (this.names[this.addProductForm.value.name]) {
-          return alert('Name already exist')
+    this.dialog.open(ModalDialogComponent, {
+      data: {
+        id: this.id,
+        editButton: false,
+        uniqueNames: this.names,
+        eventObj: {
+          img: ''
         }
-        this.modal = !this.modal;
-        return this.editImageEndName(data)
-      }
-    }
-     //если новое имя
-     if (this.addProductForm.value.name != this.editObj['name']) {
-      if (this.names[this.addProductForm.value.name]) {
-        return alert('Name already exist')
-      }
-      this.modal = !this.modal;
-      return this.editname(data);
-    }
-    //если новая картинка
-    if (this.addProductForm.value.img != this.editObj['img']) {
-      this.modal = !this.modal;
-      return this.editImage(data);
-    }
-
-    this.modal = !this.modal;
-    return this.editDescription(data)
+      },
+      maxHeight: '100vh'
+    });
+    this.updateListAfterCloseDialog();
   }
-
-  //сохраняем event обьект, переносим значения в форму
+  
   edit(e) {
-    this.editButton = true;
+
     this.editObj = e;
-    this.modal = !this.modal;
-    this.addProductForm.patchValue({ id: e.id });
-    this.addProductForm.patchValue({ name: e.name });
-    this.addProductForm.patchValue({ description: e.description });
-    this.addProductForm.patchValue({ price: e.price });
-    this.addProductForm.patchValue({ img: e.img });
+    this.dialog.open(ModalDialogComponent, {
+      data: {
+        eventObj: e,
+        uniqueNames: this.names,
+        id: this.id,
+        editButton: true,
+      },
+      maxHeight: '100vh'
+    });
+    this.updateListAfterCloseDialog();
   }
 
-  delete(e) {
-    this._uploadService.deleteItem(e.name);
-    this._uploadService.deleteIMG(e.img);
-    this.uniqueNames(e.name, false);
-
-    setTimeout(() => {
-      this.allList();
-    }, 1500);
+  info(e) {
+    this.editObj = e;
+    this.dialog.open(AdminMobileEditComponent, {
+      data: {
+        eventObj: e,
+        uniqueNames: this.names,
+        id: this.id,
+        editButton: true,
+      },
+      maxHeight: '100vh'
+    });
+    this.updateListAfterCloseDialog();
   }
+
+  updateListAfterCloseDialog() {
+    const dialog = this.dialog.afterAllClosed.subscribe(
+      e => {
+        setTimeout(() => {
+          this.allList();
+          dialog.unsubscribe()
+        }, 1500);
+      }
+    )
+  }
+
 
   private allList() {
     let result = [];
     let objData = {};
 
-    const list = this._uploadService.tableList()
+    const list = this.uploadService.tableList()
       .subscribe(
         data => {
           if (data.empty) {
@@ -181,7 +146,7 @@ export class AdminTableComponent implements OnInit {
             }
             this.uniqueNames(doc.data()['name'], true);
             this.emptyData = false;
-            this._uploadService.downloadImage(doc.data()['img'])
+            this.uploadService.downloadImage(doc.data()['img'])
               .subscribe(
                 imgURL => {
                   objData = doc.data();
@@ -202,74 +167,6 @@ export class AdminTableComponent implements OnInit {
 
         }, e => console.warn("tableList error")
       );
-  }
-
-  private editDescription(data) {
-    this._uploadService.addItem(this.name.value, data);
-    this.editObj['name'] = data['name'];
-    this.editObj['description'] = data['description'];
-    this.editObj['price'] = data['price'];
-  }
-
-  private editImageEndName(data) {
-
-    this._uploadService.deleteIMG(this.editObj['img']);
-    this._uploadService.deleteItem(this.editObj['name']);
-    this._uploadService.addItem(this.name.value, data);
-
-    this.editObj['name'] = data['name'];
-    this.editObj['description'] = data['description'];
-    this.editObj['price'] = data['price'];
-
-    this.upload(this.file.nativeElement.files[0]);
-
-    return this.returnIMG(this.editObj);
-  }
-
-  private editImage(data) {
-    this._uploadService.deleteIMG(this.editObj['img']);
-    this._uploadService.addItem(this.name.value, data);
-    this.upload(this.file.nativeElement.files[0]);
-    return this.returnIMG(this.editObj);
-  }
-
-  private editname(data) {
-    this._uploadService.deleteItem(this.editObj['name']);
-    this._uploadService.addItem(this.name.value, data);
-    this.editObj['name'] = data['name'];
-    this.editObj['description'] = data['description'];
-    this.editObj['price'] = data['price'];
-  }
-
-  private returnIMG(dataObj) {
-    this.editObj['spinner'] = true;
-    return setTimeout(() => {
-      this._uploadService.downloadImage(this.saveIMGid)
-        .subscribe(
-          imgURL => {
-            dataObj['imgURL'] = imgURL;
-            dataObj['spinner'] = false;
-            dataObj['imageError'] = null;
-          },
-          error => {
-
-            dataObj['imageError'] = 'error';
-            console.warn(error);
-          }
-        )
-    }, 2000);
-  }
-
-  private upload(file) {
-    this._uploadService.uploadImage(this.img.value, file);
-    this.editObj['img'] = this.img.value || null;
-    this.addProductForm.reset();
-  }
-
-  imgName() {
-    const id = Math.random().toString(36).substring(2);
-    this.addProductForm.patchValue({ img: id })
-    this.saveIMGid = id;
   }
 
   uniqueNames(name, value) {

@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AngularFireStorage, AngularFireUploadTask, AngularFireStorageReference } from 'angularfire2/storage';
-import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { delay, retry } from 'rxjs/operators';
+import { AngularFireStorage } from 'angularfire2/storage';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { delay } from 'rxjs/operators';
 
+import { MatSnackBar } from '@angular/material';
+import { ToastrComponent } from '../toastr/toastr.component';
 
 export interface DataDescripton {
   name: string;
@@ -18,23 +20,29 @@ export interface DataDescripton {
 export class UploadService {
 
   constructor(
-    private _afStorage: AngularFireStorage,
-    private _afs: AngularFirestore,
+    private afStorage: AngularFireStorage,
+    private afs: AngularFirestore,
+    private snackBar: MatSnackBar,
   ) { }
 
 
   tableList() {
-   return this._afs.collection("products").get().pipe(
+   return this.afs.collection("products").get().pipe(
      delay(500)
    )
   }
 
   deleteItem(productName: string){
-    this._afs.collection('products').doc(productName).delete()
+    this.afs.collection('products').doc(productName).delete()
+    .then(() => {
+      this.snackBar.openFromComponent(ToastrComponent, {
+        data: `${productName} deleted`
+      });
+    }).catch(e => alert('ERROR LOAD'))
   }
 
   deleteIMG(id){
-    this._afStorage.ref(`/images/${id}`)
+    this.afStorage.ref(`/images/${id}`)
     .delete()
     .subscribe(
       res => {
@@ -44,20 +52,22 @@ export class UploadService {
   }
 
   addItem(productName: string, objDescripton: DataDescripton) {
-    this._afs.collection("products")
+    this.afs.collection("products")
     .doc(productName)
     .set(objDescripton)
     .then(() => {
-      // alert("Document successfully written!");
+      this.snackBar.openFromComponent(ToastrComponent, {
+        data: `${productName} added`
+      });
     }).catch(e => alert('ERROR LOAD'))
   }
 
   uploadImage(id, file) {
-    this._afStorage.upload(`/images/${id}`, file)
+    this.afStorage.upload(`/images/${id}`, file)
   }
 
   downloadImage(id) {
-    return this._afStorage.ref(`/images/${id}`).getDownloadURL()
+    return this.afStorage.ref(`/images/${id}`).getDownloadURL()
   }
 
 }

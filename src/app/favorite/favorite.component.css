@@ -1,0 +1,12 @@
+.card {
+    width: 270px;
+    max-width: 270px;
+    margin: 0 auto 20px;
+}
+  
+.card:last-of-type {
+    max-width: 100%;
+    min-width: 270px;
+    width: calc(100% - 330px);
+    visibility: hidden;
+}

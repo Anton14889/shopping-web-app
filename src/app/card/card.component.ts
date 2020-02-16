@@ -1,23 +1,17 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-card',
   templateUrl: './card.component.html',
   styleUrls: ['./card.component.css']
 })
-export class CardComponent implements OnInit {
+export class CardComponent {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
 @Input() data;
 @Input() button_Left;
 @Input() button_Right;
 @Output() buttonLeft = new EventEmitter();
 @Output() buttonRight = new EventEmitter();
-
 
 clickLeft(val) {
   this.buttonLeft.emit(val);
@@ -25,7 +19,5 @@ clickLeft(val) {
 clickRight(val) {
   this.buttonRight.emit(val);
 }
-
-
 
 }

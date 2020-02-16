@@ -10,10 +10,10 @@ import { AppComponent } from '../app.component';
 export class UserInfoComponent {
 
   constructor(
-    private _data: DataService,
-    private _appComponent: AppComponent
+    private data: DataService,
+    private appComponent: AppComponent
   ) { 
-    this. _data.changeEmitted$.subscribe(
+    this. data.changeEmitted$.subscribe(
       dataServer => {
         this.user = dataServer['user'];
       });
@@ -21,7 +21,7 @@ export class UserInfoComponent {
    user = {};
 
    signOut() {
-    this._appComponent.signOut()
+    this.appComponent.signOut()
   }
 
 

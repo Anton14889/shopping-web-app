@@ -12,13 +12,13 @@ import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 export class CartComponent implements OnInit {
 
   constructor(
-    private _cartService: CartService,
+    private cartService: CartService,
     public dialog: MatDialog,
-    private _data: DataService
-  ) {}
+    private data: DataService,
+  ) { }
 
   ngOnInit() {
-    this. _data.changeEmitted$.subscribe(
+    this.data.changeEmitted$.subscribe(
       dataServer => {
         this.user = dataServer;
         if (this.user.cartSize) {
@@ -31,9 +31,9 @@ export class CartComponent implements OnInit {
   result = []
 
   delete(data) {
-    this._cartService.deleteItem(this.user.email, data.name);
+    this.cartService.deleteItem(this.user.email, data.name);
     this.allList();
-    this._data.updateCartSize()
+    this.data.updateCartSize()
   }
 
   buy(data) {
@@ -46,11 +46,11 @@ export class CartComponent implements OnInit {
 
   private allList() {
     let result = [];
-    const list = this._cartService.tableList(this.user.email)
+    this.cartService.tableList(this.user.email)
       .subscribe(
         data => {
           if (data.empty) {
-            return this.result = []
+            return this.result.length = 0
           }
           data.forEach(doc => {
             result.push(doc.data());

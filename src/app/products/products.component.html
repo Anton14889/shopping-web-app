@@ -1,8 +1,8 @@
 <div class="container mb-5">
-  <button mat-button (click)="sidenav.toggle()">sidenav.toggle()</button>
-  <mat-drawer-container class="driver__container">
-    <mat-drawer mode="side" opened  #sidenav>
-      
+  <button mat-stroked-button (click)="isOpen = !isOpen" class='mb-3'>{{isOpen ? 'Hide filter' : 'Open filter'}}</button>
+
+  <mat-sidenav-container class="driver__container" (backdropClick)="isOpen = !isOpen">
+    <mat-sidenav [mode]="mode" [opened]='isOpen' #sidenav>
 
       <div class='search'>
         <mat-form-field appearance="legacy">
@@ -22,23 +22,27 @@
           <input matInput #inpPriceMax (input)='searchByPrice(inpPriceMin.value, inpPriceMax.value)' value="99999">
         </mat-form-field>
       </div>
-
-    </mat-drawer>
-    <mat-drawer-content>
-
-      <div class="d-flex flex-wrap">
-        <ng-container *ngFor='let data of searchArr'>
-          <app-card 
-          [data]='data' 
-          [button_Left]='"Add to favorites"'
-          [button_Right]='"Add to cart"'
-          (buttonRight)='addCart(data)'
-          (buttonLeft)='addFavorites(data)'
-          ></app-card>
-
-        </ng-container>
+      <div class="search">
+        <button mat-stroked-button (click)="byMaxPrice()">Low price</button>
+        <br>
+        <button mat-stroked-button (click)="byMinPrice()" class='mt-3'>High price</button>
       </div>
 
-    </mat-drawer-content>
-  </mat-drawer-container>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+
+      <div class="d-flex flex-wrap justify-content-sm-start justify-content-center">
+
+        <div class="card" *ngFor='let data of searchArr'>
+          <app-card [data]='data' [button_Left]='"Add to favorites"' [button_Right]='"Add to cart"'
+            (buttonRight)='addCart(data)' (buttonLeft)='addFavorites(data)'></app-card>
+        </div>
+
+        <div class="card"></div>
+      </div>
+
+    </mat-sidenav-content>
+  </mat-sidenav-container>
 </div>

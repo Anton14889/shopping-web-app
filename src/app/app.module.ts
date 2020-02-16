@@ -29,6 +29,7 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 import {MatBadgeModule} from '@angular/material/badge';
 
+
 import { HostDirective } from './template-shared/host.directive';
 import { AdminProductsComponent } from './admin-products/admin-products.component';
 
@@ -40,7 +41,11 @@ import { AdminTableComponent } from './admin-table/admin-table.component';
 import { CardComponent } from './card/card.component';
 import { ModalBuyComponent } from './modal-buy/modal-buy.component';
 import { UserInfoComponent } from './user-info/user-info.component';
-
+import { ModalDialogComponent } from './modal-dialog/modal-dialog.component';
+import { AdminMobileEditComponent } from './admin-mobile-edit/admin-mobile-edit.component';
+import { ToastrComponent } from './toastr/toastr.component';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
+import {MatSnackBarModule} from "@angular/material"
 
 @NgModule({
   declarations: [
@@ -57,8 +62,11 @@ import { UserInfoComponent } from './user-info/user-info.component';
     AdminTableComponent,
     CardComponent,
     ModalBuyComponent,
-    UserInfoComponent
-
+    UserInfoComponent,
+    ModalDialogComponent,
+    AdminMobileEditComponent,
+    ToastrComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -82,12 +90,15 @@ import { UserInfoComponent } from './user-info/user-info.component';
     MatCardModule,
     MatSidenavModule,
     MatDialogModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatSnackBarModule
   ],
   providers: [AngularFirestore,
-    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}}
+    {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},
+    {provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: {duration: 1000}}
   ],
   bootstrap: [AppComponent],
-  entryComponents: [ TemplateSignComponent, ModalBuyComponent ],
+  entryComponents: [ TemplateSignComponent, ModalBuyComponent, ModalDialogComponent, AdminMobileEditComponent, ToastrComponent ],
 })
+
 export class AppModule { }

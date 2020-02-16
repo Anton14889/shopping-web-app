@@ -1,48 +1,82 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { UploadService } from '../upload-service/upload.service';
 import { CartService } from '../user-services/cart.service';
 import { DataService } from '../services/data.service';
 import { Data } from '../services/data.model';
 import { FavoritesService } from '../user-services/favorites.service';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-products',
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.css']
 })
-export class ProductsComponent implements OnInit {
+export class ProductsComponent implements OnInit, OnDestroy {
 
-  constructor(
-    private _uploadService: UploadService,
-    private _cartService: CartService,
-    private _favoritesService: FavoritesService,
-    private _data: DataService
-  ) { }
-  
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
+  isOpen = true;
+  mode = 'side';
+
   private result = [];
   searchArr = [];
+
   user: Data = {
     email: null
   };
-  opened: boolean;
+
+  constructor(
+    private uploadService: UploadService,
+    private cartService: CartService,
+    private favoritesService: FavoritesService,
+    private data: DataService,
+    changeDetectorRef: ChangeDetectorRef,
+    media: MediaMatcher
+  ) {
+    this.mobileQuery = media.matchMedia('(max-width: 576px)');
+    this._mobileQueryListener = () => {
+      this.isOpen = !this.isOpen;
+      this.mode === 'over' ? this.mode = 'side' : this.mode = 'over';
+      changeDetectorRef.detectChanges()
+    };
+    this.mobileQuery.addListener(this._mobileQueryListener);
+  }
+
   ngOnInit() {
-    this._data.changeEmitted$.subscribe(
+    if (document.documentElement.clientWidth <= 576) {
+      this.isOpen = false;
+      this.mode = 'over';
+    }
+    this.data.changeEmitted$.subscribe(
       (dataServer: Data) => {
         if (this.user.email != dataServer['email']) {
           this.user.email = dataServer.email;
           this.allList()
         }
       })
-    
+  }
+  ngOnDestroy(): void {
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
   addFavorites(data) {
-    this._favoritesService.addItem(this.user.email, data.name, data);
-    this._data.updateFavoritSize();
+    this.favoritesService.addItem(this.user.email, data.name, data);
+    this.data.updateFavoritSize();
   }
   addCart(data) {
-    this._cartService.addItem(this.user.email, data.name, data);
-    this._data.updateCartSize();
+    this.cartService.addItem(this.user.email, data.name, data);
+    this.data.updateCartSize();
+  }
+
+  byMinPrice() {
+    this.result.sort(function(a, b){
+      return b.price - a.price
+    })
+  }
+  byMaxPrice() {
+    this.result.sort(function(a, b){
+      return a.price - b.price
+    })
   }
 
   searchByPrice(min, max) {
@@ -79,13 +113,13 @@ export class ProductsComponent implements OnInit {
     let result = [];
     let objData = {};
 
-    this._uploadService.tableList()
+    this.uploadService.tableList()
       .subscribe(
         data => {
 
           data.forEach(doc => {
 
-            this._uploadService.downloadImage(doc.data()['img'])
+            this.uploadService.downloadImage(doc.data()['img'])
               .subscribe(
                 imgURL => {
                   objData = doc.data();

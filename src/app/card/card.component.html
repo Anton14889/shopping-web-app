@@ -1,9 +1,21 @@
-<mat-card class="card ml-2 mb-2 ">
+<mat-card class="card">
     <mat-card-header class='card__header'>
         <mat-card-title>{{data.name}}</mat-card-title>
     </mat-card-header>
-    <div class="card__img">
-        <img mat-card-image src="{{data.imgURL}}" alt="Photo {{data.name}}">
+    <div class="card__img d-flex justify-content-center align-items-center">
+
+        <ng-container *ngIf='!data?.spinner'>
+            <img mat-card-image src="{{data.imgURL}}" alt="Photo {{data.name}}">
+        </ng-container>
+
+        <ng-container *ngIf='data?.spinner'>
+            <mat-spinner diameter='70' class='d-flex justify-content-center'></mat-spinner>
+        </ng-container>
+        <ng-container *ngIf='data?.imageError'>
+            <span class="error">
+                {{data?.imageError}}
+            </span>
+        </ng-container>
     </div>
     <mat-card-content>
         <p>
@@ -16,7 +28,7 @@
         </p>
     </mat-card-content>
     <mat-card-actions>
-        <button mat-button (click)="clickLeft(data)">{{button_Left}}</button>
-        <button mat-button (click)="clickRight(data)">{{button_Right}}</button>
+        <button mat-stroked-button (click)="clickLeft(data)">{{button_Left}}</button>
+        <button mat-stroked-button (click)="clickRight(data)">{{button_Right}}</button>
     </mat-card-actions>
 </mat-card>

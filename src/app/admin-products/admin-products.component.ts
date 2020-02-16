@@ -10,14 +10,14 @@ import { AppComponent } from '../app.component';
 export class AdminProductsComponent implements OnInit {
 
   constructor(
-    private _authGuard: AuthGuard,
-    private _appComponent: AppComponent
+    private authGuard: AuthGuard,
+    private appComponent: AppComponent
   ) { }
 
   ngOnInit() {
-    this._authGuard.checkLogin('/sign-in')
+    this.authGuard.checkLogin('/sign-in')
   }
   signOut() {
-    this._appComponent.signOut()
+    this.appComponent.signOut()
   }
 }

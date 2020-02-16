@@ -14,9 +14,9 @@ export class HeaderComponent {
  cartSize: Number;
  favoritSize: Number;
 
- constructor(_data: DataService
+ constructor(data: DataService
   ) {
-    _data.changeEmitted$.subscribe(
+    data.changeEmitted$.subscribe(
      (dataServer: Data) => {
         this.cartSize = dataServer.cartSize;
         this.favoritSize = dataServer.favoritSize;

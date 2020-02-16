@@ -1,0 +1,14 @@
+label {
+    margin: 0;
+    padding: 0;
+    font-size: 1.3em;
+    font-weight: 500;
+    cursor: pointer;
+    display: block;
+  }
+.full-width {
+    width: 100%;
+}
+.form__container {
+    overflow-x: hidden;
+}

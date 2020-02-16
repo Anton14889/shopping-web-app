@@ -4,6 +4,7 @@ import { DataService } from '../services/data.service';
 import { FavoritesService } from '../user-services/favorites.service';
 import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 
+
 @Component({
   selector: 'app-favorite',
   templateUrl: './favorite.component.html',
@@ -12,12 +13,12 @@ import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 export class FavoriteComponent implements OnInit {
 
   constructor(
-    private _favoritService: FavoritesService,
+    private favoritService: FavoritesService,
     public dialog: MatDialog,
-    private _data: DataService
+    private data: DataService,
   ) { }
   ngOnInit() {
-    this._data.changeEmitted$.subscribe(
+    this.data.changeEmitted$.subscribe(
       dataServer => {
         this.user = dataServer;
         if (this.user.favoritSize) {
@@ -30,9 +31,9 @@ export class FavoriteComponent implements OnInit {
   result = []
 
   delete(data) {
-    this._favoritService.deleteItem(this.user.email, data.name);
+    this.favoritService.deleteItem(this.user.email, data.name);
     this.allList();
-    this._data.updateFavoritSize()
+    this.data.updateFavoritSize()
   }
 
   buy(data) {
@@ -45,11 +46,11 @@ export class FavoriteComponent implements OnInit {
 
   private allList() {
     let result = [];
-    this._favoritService.tableList(this.user.email)
+    this.favoritService.tableList(this.user.email)
       .subscribe(
         data => {
           if (data.empty) {
-            return this.result = []
+            return this.result.length = 0
           }
           data.forEach(doc => {
             result.push(doc.data());

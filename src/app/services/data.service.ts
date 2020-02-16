@@ -14,7 +14,7 @@ export class DataService {
   ) { }
   data: any;
 
-  private emitChangeSource = new ReplaySubject(this.data);
+  private emitChangeSource = new ReplaySubject(null);
 
   changeEmitted$ = this.emitChangeSource.asObservable();
 
