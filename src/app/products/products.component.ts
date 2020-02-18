@@ -5,6 +5,7 @@ import { DataService } from '../services/data.service';
 import { Data } from '../services/data.model';
 import { FavoritesService } from '../user-services/favorites.service';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-products',
@@ -42,12 +43,14 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
+  dataServer: Subscription;
+
   ngOnInit() {
     if (document.documentElement.clientWidth <= 576) {
       this.isOpen = false;
       this.mode = 'over';
     }
-    this.data.changeEmitted$.subscribe(
+    this.dataServer = this.data.changeEmitted$.subscribe(
       (dataServer: Data) => {
         if (this.user.email != dataServer['email']) {
           this.user.email = dataServer.email;
@@ -55,26 +58,35 @@ export class ProductsComponent implements OnInit, OnDestroy {
         }
       })
   }
+
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.dataServer.unsubscribe()
   }
 
   addFavorites(data) {
-    this.favoritesService.addItem(this.user.email, data.name, data);
-    this.data.updateFavoritSize();
+    let favorites = {
+      id: data.id,
+      name: data.name
+    };
+    this.favoritesService.addItem(this.user.email, `${data.id}`, favorites);
   }
+
   addCart(data) {
-    this.cartService.addItem(this.user.email, data.name, data);
-    this.data.updateCartSize();
+    let cart = {
+      id: data.id,
+      name: data.name
+    };
+    this.cartService.addItem(this.user.email, `${data.id}`, cart);
   }
 
   byMinPrice() {
-    this.result.sort(function(a, b){
+    this.result.sort(function (a, b) {
       return b.price - a.price
     })
   }
   byMaxPrice() {
-    this.result.sort(function(a, b){
+    this.result.sort(function (a, b) {
       return a.price - b.price
     })
   }

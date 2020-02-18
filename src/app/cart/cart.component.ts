@@ -3,6 +3,9 @@ import { CartService } from '../user-services/cart.service';
 import { DataService } from '../services/data.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
+import { UploadService } from '../upload-service/upload.service';
+import { distinctUntilChanged } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-cart',
@@ -15,25 +18,44 @@ export class CartComponent implements OnInit {
     private cartService: CartService,
     public dialog: MatDialog,
     private data: DataService,
+    private uploadService: UploadService,
   ) { }
 
-  ngOnInit() {
-    this.data.changeEmitted$.subscribe(
-      dataServer => {
-        this.user = dataServer;
-        if (this.user.cartSize) {
-          this.allList()
-        }
-      });
-  }
+  dataServer: Subscription;
+  allListSub: Subscription;
+  cartList: Subscription;
+  imgList: Subscription;
 
   user;
-  result = []
+  result = [];
 
-  delete(data) {
-    this.cartService.deleteItem(this.user.email, data.name);
-    this.allList();
-    this.data.updateCartSize()
+  ngOnInit() {
+    this.dataServer = this.data.changeEmitted$
+      .subscribe(
+        dataServer => {
+          this.user = dataServer;
+        });
+    try {
+      this.allList()
+    } catch (error) {
+      console.warn('property not find')
+    }
+  }
+
+  ngOnDestroy(): void {
+    try {
+      this.dataServer.unsubscribe();
+      this.imgList.unsubscribe();
+      this.cartList.unsubscribe();
+      this.allListSub.unsubscribe();
+    } catch (error) {
+
+    }
+  }
+
+  delete(data, i) {
+    this.result.splice(i, 1);
+    this.cartService.deleteItem(this.user.email, data.originalName, data.name);
   }
 
   buy(data) {
@@ -46,17 +68,52 @@ export class CartComponent implements OnInit {
 
   private allList() {
     let result = [];
-    this.cartService.tableList(this.user.email)
+    let dataObj = {};
+    this.allListSub = this.cartService.tableList(this.user.email)
+      .pipe(
+        distinctUntilChanged()
+      )
       .subscribe(
         data => {
           if (data.empty) {
-            return this.result.length = 0
+            this.allListSub.unsubscribe();
+            return this.result = result;
           }
+
           data.forEach(doc => {
-            result.push(doc.data());
-            this.result = result;
+
+            this.cartList = this.cartService.searchById(doc.data()['id'])
+              .pipe(
+                distinctUntilChanged()
+              ).subscribe(
+                data => {
+
+                  this.imgList = this.uploadService.downloadImage(data.payload.doc.data()['img'])
+                    .pipe(
+                      distinctUntilChanged()
+                    )
+                    .subscribe(
+                      imgURL => {
+                        dataObj = data.payload.doc.data();
+                        dataObj['originalName'] = doc.id;
+                        dataObj['imgURL'] = imgURL;
+                        result.push(dataObj)
+
+                      },
+                      error => {
+                        console.warn(error);
+                        dataObj = data.payload.doc.data();
+                        dataObj['imageError'] = 'error';
+                        result.push(dataObj)
+
+                      }
+                    )
+                }
+              )
           })
+          this.result = result
         }, e => console.warn("tableList error")
       )
   }
+
 }

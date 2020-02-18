@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { delay } from 'rxjs/operators';
+import { delay, flatMap } from 'rxjs/operators';
 
 import { MatSnackBar } from '@angular/material';
 import { ToastrComponent } from '../toastr/toastr.component';
+import { DataService } from '../services/data.service';
 
 export interface DataDescripton {
-  name: string;
   id: number;
-  description: string;
-  price: number;
-  img: string;
+  name: string;
 }
 
 @Injectable({
@@ -21,7 +19,19 @@ export class CartService {
   constructor(
     private snackBar: MatSnackBar,
     private afs: AngularFirestore,
+    private data: DataService,
   ) { }
+
+
+  searchById(id) {
+    return this.afs.collection('products', ref =>
+      ref.where('id', '==', id)
+        .limit(1))
+      .snapshotChanges()
+      .pipe(flatMap(clients => clients))
+
+  }
+
 
   tableList(userEmail) {
     return this.afs.collection("usersData")
@@ -41,12 +51,15 @@ export class CartService {
       .set(objDescripton)
       .then(() => {
         this.snackBar.openFromComponent(ToastrComponent, {
-          data: `${productName} added to cart`
+          data: `${objDescripton['name']} added to cart`
         });
-      }).catch(e => alert('ERROR LOAD'))
+        this.cartSize(userEmail);
+      }).catch(e => {
+        console.warn(e)
+        alert('ERROR LOAD')})
   }
 
-  deleteItem(userEmail: string, productName: string) {
+  deleteItem(userEmail: string, productName: string, name: string) {
     this.afs.collection(`usersData`)
       .doc(`${userEmail}`)
       .collection('cart')
@@ -54,9 +67,24 @@ export class CartService {
       .delete()
       .then(() => {
         this.snackBar.openFromComponent(ToastrComponent, {
-          data: `${productName} deleted from cart`
+          data: `${name} deleted from cart`
         });
-      }).catch(e => alert('ERROR LOAD'))
+        this.cartSize(userEmail)
+      }).catch(e => {
+        console.warn(e)
+        alert('ERROR DELETE')
+      })
+  }
+
+  cartSize(userEmail) {
+    this.tableList(userEmail)
+      .subscribe(
+        data => {
+          let size;
+          data.empty ? size = null : size = data.size;
+          this.data.updateCartSize(size)
+        }
+      )
   }
 
 }

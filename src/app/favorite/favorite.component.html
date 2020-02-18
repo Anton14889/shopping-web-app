@@ -1,8 +1,9 @@
 <div class="container d-flex flex-wrap mb-5">
-    <div class="card" *ngFor='let data of result'>
-        <app-card [button_Left]='"Delete"' [button_Right]='"Buy"' [data]='data' (buttonLeft)='delete(data)'
+    <div class="card" *ngFor='let data of result; let i = index'>
+        <app-card [button_Left]='"Delete"' [button_Right]='"Buy"' [data]='data' (buttonLeft)='delete(data, i)'
             (buttonRight)='buy(data)'>
         </app-card>
     </div>
-    <div class="card"></div>
+    <div class="card hide"></div>
+    <div class="card hide"></div>
 </div>

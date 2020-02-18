@@ -28,10 +28,10 @@ export class AdminMobileEditComponent {
     public uploadService: UploadService
   ) {
 
-    this.names = data.uniqueNames
+    this.names = data.uniqueNames;
   }
 
-  names
+  names;
 
   edit() {
     this.dialog.open(ModalDialogComponent, {

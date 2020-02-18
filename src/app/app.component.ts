@@ -9,6 +9,8 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { AuthService } from './auth/auth.service';
 import { Data } from './services/data.model';
+import { CartService } from './user-services/cart.service';
+import { FavoritesService } from './user-services/favorites.service';
 
 export interface Item { name: string; }
 
@@ -35,6 +37,8 @@ export class AppComponent implements OnInit {
     private afs: AngularFirestore,
     private ref: ChangeDetectorRef,
     private router: Router,
+    private cartService: CartService,
+    private favoritesService: FavoritesService,
   ) { }
 
 
@@ -55,9 +59,9 @@ export class AppComponent implements OnInit {
           phoneNumber: user.phoneNumber,
         }
         this.ref.detectChanges();
-        this.data.emitChange(this.user);
-        this.data.updateCartSize();
-        this.data.updateFavoritSize();
+        this.data.emitUser(this.user);
+        this.cartService.cartSize(this.user.email)
+        this.favoritesService.favoritSize(this.user.email)
 
         this.afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
           data => {
@@ -67,8 +71,8 @@ export class AppComponent implements OnInit {
               this.routAdminUser = 'admin';
               this.user.isAdmin = true;
               setTimeout(() => {
-                // this.router.navigate(['admin'])
-                this.router.navigate(['products'])
+                this.router.navigate(['admin'])
+                // this.router.navigate(['products'])
               }, 0);
               return
             }
@@ -85,7 +89,7 @@ export class AppComponent implements OnInit {
           favoritSize: null,
           cartSize: null
         };
-        this.data.emitChange(this.user);
+        this.data.emitUser(this.user);
        
         this.routAdminUser = 'sign-in';
         this.router.navigate(['/'])

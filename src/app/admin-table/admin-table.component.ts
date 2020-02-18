@@ -7,6 +7,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 import { AdminMobileEditComponent } from '../admin-mobile-edit/admin-mobile-edit.component';
+import { Subscription } from 'rxjs';
 
 export interface UserData {
   id: string;
@@ -37,10 +38,11 @@ export class AdminTableComponent implements OnInit {
   editObj = {};
 
 
-  modal = true;
+  allListSub: Subscription;
+  imgList: Subscription;
+
   editButton = false;
   emptyData = false;
-  addedProduct = false;
 
   mobileQuery: MediaQueryList;
   private mobileQueryListener: () => void;
@@ -58,7 +60,6 @@ export class AdminTableComponent implements OnInit {
     this.mobileQuery.addListener(this.mobileQueryListener);
   }
 
-
   ngOnInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -71,6 +72,12 @@ export class AdminTableComponent implements OnInit {
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this.mobileQueryListener);
+    try {
+      this.imgList.unsubscribe();
+      this.allListSub.unsubscribe();
+    } catch (error) {
+
+    }
   }
   openSubmitForm() {
 
@@ -87,9 +94,8 @@ export class AdminTableComponent implements OnInit {
     });
     this.updateListAfterCloseDialog();
   }
-  
-  edit(e) {
 
+  edit(e) {
     this.editObj = e;
     this.dialog.open(ModalDialogComponent, {
       data: {
@@ -100,7 +106,6 @@ export class AdminTableComponent implements OnInit {
       },
       maxHeight: '100vh'
     });
-    this.updateListAfterCloseDialog();
   }
 
   info(e) {
@@ -114,7 +119,6 @@ export class AdminTableComponent implements OnInit {
       },
       maxHeight: '100vh'
     });
-    this.updateListAfterCloseDialog();
   }
 
   updateListAfterCloseDialog() {
@@ -128,12 +132,11 @@ export class AdminTableComponent implements OnInit {
     )
   }
 
-
   private allList() {
     let result = [];
     let objData = {};
 
-    const list = this.uploadService.tableList()
+    this.allListSub = this.uploadService.tableList()
       .subscribe(
         data => {
           if (data.empty) {
@@ -146,7 +149,8 @@ export class AdminTableComponent implements OnInit {
             }
             this.uniqueNames(doc.data()['name'], true);
             this.emptyData = false;
-            this.uploadService.downloadImage(doc.data()['img'])
+
+            this.imgList = this.uploadService.downloadImage(doc.data()['img'])
               .subscribe(
                 imgURL => {
                   objData = doc.data();

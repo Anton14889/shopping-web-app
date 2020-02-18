@@ -18,6 +18,7 @@ export class ModalDialogComponent {
   ) {
     if (data.editButton) {
       this.editButton = data.editButton;
+      this.names = data.uniqueNames;
       this.addProductForm.patchValue({ id: data.eventObj.id });
       this.addProductForm.patchValue({ name: data.eventObj.name });
       this.addProductForm.patchValue({ description: data.eventObj.description });
@@ -25,13 +26,16 @@ export class ModalDialogComponent {
       this.addProductForm.patchValue({ img: data.eventObj.img });
     } else {
       this.editButton = data.editButton;
+      this.names = data.uniqueNames;
       this.addProductForm.reset();
       this.addProductForm.patchValue({ id: data.id });
     }
 
   }
   editButton;
-close = false
+
+  names;
+  
   addProductForm = this.fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
@@ -47,9 +51,7 @@ close = false
   get img() { return this.addProductForm.get('img'); }
 
   closeDialog(): void {
-    this.dialogRef.close()
-    this.dialogRef.componentInstance.close
-    
+    this.dialogRef.close();
   }
 
 
@@ -59,7 +61,7 @@ close = false
     if (this.data.uniqueNames[this.name.value]) {
       return alert('Name already exists')
     }
-    // this.addedProduct = true;
+   
     let data = {
       name: this.name.value,
       id: +this.data.id + 1,
@@ -126,6 +128,7 @@ close = false
     this.uploadService.deleteIMG(this.data.eventObj['img']);
     this.uploadService.deleteItem(this.data.eventObj['name']);
     this.uploadService.addItem(this.name.value, data);
+    this.uniqueNames(this.data.eventObj['name'], false)
 
     this.data.eventObj['name'] = data['name'];
     this.data.eventObj['description'] = data['description'];
@@ -146,6 +149,7 @@ close = false
   private editname(data) {
     this.uploadService.deleteItem(this.data.eventObj['name']);
     this.uploadService.addItem(this.name.value, data);
+    this.uniqueNames(this.data.eventObj['name'], false)
     this.data.eventObj['name'] = data['name'];
     this.data.eventObj['description'] = data['description'];
     this.data.eventObj['price'] = data['price'];
@@ -178,7 +182,9 @@ close = false
         )
     }, 2000);
   }
-
+  uniqueNames(name, value) {
+    this.names[name] = value;
+  }
   imgName() {
     const id = Math.random().toString(36).substring(2);
     this.addProductForm.patchValue({ img: id })

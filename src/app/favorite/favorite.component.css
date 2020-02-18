@@ -4,9 +4,9 @@
     margin: 0 auto 20px;
 }
   
-.card:last-of-type {
+.card.hide {
     max-width: 100%;
     min-width: 270px;
-    width: calc(100% - 330px);
+    /* width: calc(100% - 330px); */
     visibility: hidden;
-}
+  }
