@@ -67,7 +67,9 @@ export class UploadService {
   }
 
   downloadImage(id) {
-    return this.afStorage.ref(`/images/${id}`).getDownloadURL()
+    return this.afStorage.ref(`/images/${id}`).getDownloadURL().pipe(
+      delay(800)
+    )
   }
 
 }
