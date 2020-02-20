@@ -50,13 +50,22 @@ export class CartService {
       .doc(productName)
       .set(objDescripton)
       .then(() => {
-        this.snackBar.openFromComponent(ToastrComponent, {
-          data: `${objDescripton['name']} added to cart`
-        });
-        this.cartSize(userEmail);
+        if (userEmail) {
+          this.snackBar.openFromComponent(ToastrComponent, {
+            data: `${objDescripton['name']} added to cart`
+          });
+        }
+        this.cartSize(userEmail)
       }).catch(e => {
         console.warn(e)
-        alert('ERROR LOAD')})
+
+        if (!userEmail) {
+          alert('try register to add to cart')
+        } else {
+          alert('error add to cart')
+        }
+
+      })
   }
 
   deleteItem(userEmail: string, productName: string, name: string) {

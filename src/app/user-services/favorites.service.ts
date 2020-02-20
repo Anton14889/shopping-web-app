@@ -46,13 +46,19 @@ export class FavoritesService {
       .doc(productName)
       .set(objDescripton)
       .then(() => {
-        this.snackBar.openFromComponent(ToastrComponent, {
-          data: `${objDescripton['name']} added to favorites`
-        });
+        if (userEmail) {
+          this.snackBar.openFromComponent(ToastrComponent, {
+            data: `${objDescripton['name']} added to favorites`
+          });
+        }
         this.favoritSize(userEmail);
       }).catch(e => {
         console.warn(e);
-        alert('ERROR LOAD');
+        if (!userEmail) {
+          alert('try register to add to favorites')
+        } else {
+          alert('error add to favorites')
+        }
       })
   }
 
@@ -75,7 +81,7 @@ export class FavoritesService {
 
   favoritSize(userEmail) {
 
-      this.tableList(userEmail)
+    this.tableList(userEmail)
       .subscribe(
         data => {
           let size;

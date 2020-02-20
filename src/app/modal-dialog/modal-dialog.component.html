@@ -54,7 +54,7 @@
                         Add image
                     </label>
                     <br>
-                    <input placeholder="img:" id='img' type='file' #file (change)='imgName()'>
+                    <input placeholder="img:" accept="image/x-png,image/gif,image/jpeg" id='img' type='file' #file (change)='imgName()'>
                     <mat-error *ngIf='img.value == null'>
                         Add image
                     </mat-error>

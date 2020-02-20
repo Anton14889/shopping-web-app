@@ -26,17 +26,23 @@ export class CartComponent implements OnInit {
   cartList: Subscription;
   imgList: Subscription;
 
-  user;
+  user = {
+    email: null
+  };
   result = [];
+  spinner = false;
 
   ngOnInit() {
     this.dataServer = this.data.changeEmitted$
       .subscribe(
         dataServer => {
-          this.user = dataServer;
+          if (dataServer['email'] != this.user['email']) {
+            this.user['email'] = dataServer['email'];
+            this.allList()
+          }
         });
     try {
-      this.allList()
+      
     } catch (error) {
       console.warn('property not find')
     }
@@ -69,6 +75,8 @@ export class CartComponent implements OnInit {
   private allList() {
     let result = [];
     let dataObj = {};
+    this.spinner = true;
+
     this.allListSub = this.cartService.tableList(this.user.email)
       .pipe(
         distinctUntilChanged()
@@ -77,6 +85,7 @@ export class CartComponent implements OnInit {
         data => {
           if (data.empty) {
             this.allListSub.unsubscribe();
+            this.spinner = false;
             return this.result = result;
           }
 
@@ -98,14 +107,14 @@ export class CartComponent implements OnInit {
                         dataObj['originalName'] = doc.id;
                         dataObj['imgURL'] = imgURL;
                         result.push(dataObj)
-
+                        this.spinner = false;
                       },
                       error => {
                         console.warn(error);
                         dataObj = data.payload.doc.data();
                         dataObj['imageError'] = 'error';
                         result.push(dataObj)
-
+                        this.spinner = false;
                       }
                     )
                 }

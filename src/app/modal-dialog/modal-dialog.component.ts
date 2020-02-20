@@ -3,6 +3,9 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Validators, FormBuilder } from '@angular/forms';
 import { UploadService } from '../upload-service/upload.service';
 
+import { smallImg } from '../imgSmall';
+import { DataService } from '../services/data.service';
+
 @Component({
   selector: 'app-modal-dialog',
   templateUrl: './modal-dialog.component.html',
@@ -15,6 +18,7 @@ export class ModalDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<ModalDialogComponent>,
     private uploadService: UploadService,
+    private dataService: DataService,
   ) {
     if (data.editButton) {
       this.editButton = data.editButton;
@@ -35,7 +39,7 @@ export class ModalDialogComponent {
   editButton;
 
   names;
-  
+
   addProductForm = this.fb.group({
     name: ['', Validators.required],
     description: ['', Validators.required],
@@ -54,14 +58,12 @@ export class ModalDialogComponent {
     this.dialogRef.close();
   }
 
-
-
   onSubmit() {
     //нельзя добавить новый продукт с существующим именем
     if (this.data.uniqueNames[this.name.value]) {
       return alert('Name already exists')
     }
-   
+
     let data = {
       name: this.name.value,
       id: +this.data.id + 1,
@@ -72,10 +74,11 @@ export class ModalDialogComponent {
 
     this.uploadService.addItem(this.name.value, data);
     this.upload(this.file.nativeElement.files[0]);
+    this.dataService.emitProduct(true);
     this.closeDialog();
 
-  }
 
+  }
 
 
   onEdit() {
@@ -135,7 +138,6 @@ export class ModalDialogComponent {
     this.data.eventObj['price'] = data['price'];
 
     this.upload(this.file.nativeElement.files[0]);
-
     return this.returnIMG(this.data.eventObj);
   }
 
@@ -157,10 +159,13 @@ export class ModalDialogComponent {
 
 
   private upload(file) {
-    this.uploadService.uploadImage(this.img.value, file);
-    //валидация картинки
-    this.data.eventObj['img'] = this.img.value || null;
-    this.addProductForm.reset();
+    smallImg(file, 80, 500, Infinity, 0.9, blob => {
+      this.uploadService.uploadImage(this.img.value, blob);
+
+      //валидация картинки
+      this.data.eventObj['img'] = this.img.value || null;
+      this.addProductForm.reset();
+    });
   }
 
 
@@ -182,9 +187,11 @@ export class ModalDialogComponent {
         )
     }, 2000);
   }
+
   uniqueNames(name, value) {
     this.names[name] = value;
   }
+
   imgName() {
     const id = Math.random().toString(36).substring(2);
     this.addProductForm.patchValue({ img: id })

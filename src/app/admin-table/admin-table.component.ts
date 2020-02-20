@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +8,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 import { AdminMobileEditComponent } from '../admin-mobile-edit/admin-mobile-edit.component';
 import { Subscription } from 'rxjs';
+import { DataService } from '../services/data.service';
+
 
 export interface UserData {
   id: string;
@@ -25,7 +27,7 @@ export interface UserData {
   styleUrls: ['./admin-table.component.css']
 })
 
-export class AdminTableComponent implements OnInit {
+export class AdminTableComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['id', 'image', 'name', 'description', 'price', 'edit'];
   dataSource: MatTableDataSource<UserData>;
@@ -37,9 +39,12 @@ export class AdminTableComponent implements OnInit {
   private names = {};
   editObj = {};
 
+  addProduct = false;
+
 
   allListSub: Subscription;
   imgList: Subscription;
+  dataServer: Subscription;
 
   editButton = false;
   emptyData = false;
@@ -51,6 +56,7 @@ export class AdminTableComponent implements OnInit {
     private uploadService: UploadService,
     media: MediaMatcher,
     public dialog: MatDialog,
+    private data: DataService,
   ) {
     this.dataSource = new MatTableDataSource([]);
     this.mobileQuery = media.matchMedia('(max-width: 768px)');
@@ -75,6 +81,7 @@ export class AdminTableComponent implements OnInit {
     try {
       this.imgList.unsubscribe();
       this.allListSub.unsubscribe();
+      this.dataServer.unsubscribe();
     } catch (error) {
 
     }
@@ -95,20 +102,7 @@ export class AdminTableComponent implements OnInit {
     this.updateListAfterCloseDialog();
   }
 
-  edit(e) {
-    this.editObj = e;
-    this.dialog.open(ModalDialogComponent, {
-      data: {
-        eventObj: e,
-        uniqueNames: this.names,
-        id: this.id,
-        editButton: true,
-      },
-      maxHeight: '100vh'
-    });
-  }
-
-  info(e) {
+  openInfo(e) {
     this.editObj = e;
     this.dialog.open(AdminMobileEditComponent, {
       data: {
@@ -119,15 +113,23 @@ export class AdminTableComponent implements OnInit {
       },
       maxHeight: '100vh'
     });
+    this.updateListAfterCloseDialog()
   }
 
   updateListAfterCloseDialog() {
+
     const dialog = this.dialog.afterAllClosed.subscribe(
       e => {
-        setTimeout(() => {
-          this.allList();
-          dialog.unsubscribe()
-        }, 1500);
+        this.dataServer = this.data.changeEmitted$
+          .subscribe(
+            dataServer => {
+              if (dataServer['product']) {
+                this.data.emitProduct(false);
+                this.allList();
+                dialog.unsubscribe();
+              }
+            }
+          )
       }
     )
   }
@@ -135,6 +137,7 @@ export class AdminTableComponent implements OnInit {
   private allList() {
     let result = [];
     let objData = {};
+    this.addProduct = true;
 
     this.allListSub = this.uploadService.tableList()
       .subscribe(
@@ -157,6 +160,7 @@ export class AdminTableComponent implements OnInit {
                   objData['imgURL'] = imgURL;
                   result.push(objData)
                   this.dataSource = new MatTableDataSource(result);
+                  this.addProduct = false;
                 },
                 error => {
                   console.warn(error);
@@ -164,7 +168,7 @@ export class AdminTableComponent implements OnInit {
                   objData['imageError'] = 'error';
                   result.push(objData)
                   this.dataSource = new MatTableDataSource(result);
-
+                  this.addProduct = false;
                 }
               )
           })

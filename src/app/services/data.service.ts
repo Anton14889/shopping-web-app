@@ -26,9 +26,10 @@ export class DataService {
     this.data['cartSize'] = change;
     this.emitChangeSource.next(this.data)
   }
+
   
-  emitAdminAddProduct() {
-    this.data['adminAddProduct'] = true
+  emitProduct(change: boolean) {
+    this.data['product'] = change;
   }
 
 

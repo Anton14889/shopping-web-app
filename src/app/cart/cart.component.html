@@ -1,3 +1,6 @@
+<div class="spinner d-flex justify-content-center" *ngIf='spinner'>
+    <mat-spinner diameter='50'></mat-spinner>
+</div>
 <div class="container d-flex flex-wrap mb-5">
     <div class="card" *ngFor='let data of result; let i = index'>
         <app-card [button_Left]='"Delete"' [button_Right]='"Buy"' [data]='data' (buttonLeft)='delete(data, i)'

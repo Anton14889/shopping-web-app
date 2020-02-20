@@ -4,9 +4,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {FormsModule,ReactiveFormsModule} from '@angular/forms';
 
 import { AngularFireAuthModule } from 'angularfire2/auth';
-import { AngularFireModule } from 'angularfire2';
-import { AngularFirestore } from '@angular/fire/firestore';
+// import { AngularFireModule } from 'angularfire2';
+// import { AngularFirestore } from '@angular/fire/firestore';
 import { environment } from '../environments/environment';
+
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore'; // << Note AngularFirestoreModule !!!
+import { AngularFireDatabaseModule } from '@angular/fire/database';
 
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
@@ -79,6 +83,8 @@ import {MatSnackBarModule} from "@angular/material"
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule,
     AngularFireStorageModule,
+    AngularFirestoreModule,
+    AngularFireDatabaseModule,
     //material
     MatToolbarModule,
     MatButtonModule,

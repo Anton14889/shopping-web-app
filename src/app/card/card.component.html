@@ -30,5 +30,8 @@
     <mat-card-actions>
         <button mat-stroked-button (click)="clickLeft(data)">{{button_Left}}</button>
         <button mat-stroked-button (click)="clickRight(data)">{{button_Right}}</button>
+        <ng-container *ngIf='close_Button'>
+            <button mat-stroked-button (click)="clickCloseButton(data)">{{close_Button}}</button>
+        </ng-container>
     </mat-card-actions>
 </mat-card>

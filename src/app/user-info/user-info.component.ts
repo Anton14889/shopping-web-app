@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { AppComponent } from '../app.component';
+import { Data } from '../services/data.model';
 
 @Component({
   selector: 'app-user-info',
@@ -18,7 +19,13 @@ export class UserInfoComponent {
         this.user = dataServer['user'];
       });
    }
-   user = {};
+   user = {
+    email: null,
+    displayName: null,
+    photoURL: null,
+    emailVerified: null,
+    phoneNumber: null,
+   };
 
    signOut() {
     this.appComponent.signOut()

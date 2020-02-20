@@ -21,6 +21,8 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
   private result = [];
   searchArr = [];
+  dataServer: Subscription;
+  spinner = false;
 
   user: Data = {
     email: null
@@ -43,7 +45,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
-  dataServer: Subscription;
+ 
 
   ngOnInit() {
     if (document.documentElement.clientWidth <= 576) {
@@ -54,9 +56,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
       (dataServer: Data) => {
         if (this.user.email != dataServer['email']) {
           this.user.email = dataServer.email;
-          this.allList()
         }
       })
+    this.allList()
   }
 
   ngOnDestroy(): void {
@@ -84,11 +86,17 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.result.sort(function (a, b) {
       return b.price - a.price
     })
+    if (document.documentElement.clientWidth <= 576) {
+      this.isOpen = false;
+    }
   }
   byMaxPrice() {
     this.result.sort(function (a, b) {
       return a.price - b.price
     })
+    if (document.documentElement.clientWidth <= 576) {
+      this.isOpen = false;
+    }
   }
 
   searchByPrice(min, max) {
@@ -124,6 +132,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   private allList() {
     let result = [];
     let objData = {};
+    this.spinner = true;
 
     this.uploadService.tableList()
       .subscribe(
@@ -139,6 +148,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
                   result.push(objData)
                   this.result = result;
                   this.searchArr = result;
+                  this.spinner = false;
                 },
                 error => {
                   console.warn(error);
@@ -147,6 +157,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
                   result.push(objData)
                   this.result = result;
                   this.searchArr = result;
+                  this.spinner = false;
                 }
               )
           })

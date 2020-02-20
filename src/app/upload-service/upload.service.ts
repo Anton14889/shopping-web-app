@@ -47,7 +47,9 @@ export class UploadService {
     .subscribe(
       res => {
         console.log('DELETED')
-      }, error => alert('ERROR delete image')
+      }, error => {
+        alert('ERROR delete image');
+      }
     )
   }
 
@@ -59,7 +61,9 @@ export class UploadService {
       this.snackBar.openFromComponent(ToastrComponent, {
         data: `${productName} added`
       });
-    }).catch(e => alert('ERROR LOAD'))
+    }).catch(e => {
+      alert('ERROR LOAD');
+    })
   }
 
   uploadImage(id, file) {

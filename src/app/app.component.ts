@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, NgZone } from '@angular/core';
 
 import { DataService } from './services/data.service';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -39,8 +39,8 @@ export class AppComponent implements OnInit {
     private router: Router,
     private cartService: CartService,
     private favoritesService: FavoritesService,
+    private ngZone: NgZone
   ) { }
-
 
   ngOnInit() {
     this.auf();
@@ -71,13 +71,13 @@ export class AppComponent implements OnInit {
               this.routAdminUser = 'admin';
               this.user.isAdmin = true;
               setTimeout(() => {
-                this.router.navigate(['admin'])
+                this.navigate(['admin']);
                 // this.router.navigate(['products'])
               }, 0);
               return
             }
             this.routAdminUser = 'user';
-            this.router.navigate(['products'])
+            this.navigate(['products']);
             return
           }
         )
@@ -90,13 +90,12 @@ export class AppComponent implements OnInit {
           cartSize: null
         };
         this.data.emitUser(this.user);
-       
+
         this.routAdminUser = 'sign-in';
-        this.router.navigate(['/'])
+        this.navigate(['products']);
       }
     });
   }
-
 
   signOut() {
     this.afAuth.auth.signOut().then(_ => {
@@ -106,5 +105,8 @@ export class AppComponent implements OnInit {
     });
   }
 
+  public navigate(commands: any[]): void {
+    this.ngZone.run(() => this.router.navigate(commands)).then();
+  }
 
 }
