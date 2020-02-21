@@ -124,9 +124,11 @@ export class AdminTableComponent implements OnInit, OnDestroy {
           .subscribe(
             dataServer => {
               if (dataServer['product']) {
-                this.data.emitProduct(false);
                 this.allList();
-                dialog.unsubscribe();
+                setTimeout(() => {
+                  this.data.emitProduct(false);
+                  dialog.unsubscribe();
+                }, 300);
               }
             }
           )
