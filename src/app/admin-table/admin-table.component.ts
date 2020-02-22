@@ -97,9 +97,15 @@ export class AdminTableComponent implements OnInit, OnDestroy {
           img: ''
         }
       },
-      maxHeight: '100vh'
-    });
+      maxHeight: '80vh',
+      maxWidth: '95vw',
+      position: {
+        'top': '15vh'
+      }
+    }
+    );
     this.updateListAfterCloseDialog();
+
   }
 
   openInfo(e) {
@@ -111,7 +117,10 @@ export class AdminTableComponent implements OnInit, OnDestroy {
         id: this.id,
         editButton: true,
       },
-      maxHeight: '100vh'
+      maxWidth: '96vw',
+      position: {
+        'top': '25vh'
+      }
     });
     this.updateListAfterCloseDialog()
   }

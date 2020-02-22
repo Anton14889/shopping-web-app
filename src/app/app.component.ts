@@ -71,8 +71,8 @@ export class AppComponent implements OnInit {
               this.routAdminUser = 'admin';
               this.user.isAdmin = true;
               setTimeout(() => {
-                // this.navigate(['admin']);
-                this.router.navigate(['products'])
+                this.navigate(['admin']);
+                // this.router.navigate(['products'])
               }, 0);
               return
             }

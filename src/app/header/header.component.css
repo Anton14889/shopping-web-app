@@ -29,7 +29,7 @@
   .example-sidenav {
     width: 250px;
     height: inherit;
-    /* top: 64px; */
+    top: 64px;
     position: absolute;
   }
 
@@ -44,7 +44,7 @@
 }
 @media screen and (max-width: 599px) {
   .example-sidenav {
-    /* top: 56px; */
+    top: 56px;
   }
 
 }
