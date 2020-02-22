@@ -77,7 +77,6 @@ export class ModalDialogComponent {
     this.dataService.emitProduct(true);
     this.closeDialog();
 
-
   }
 
 

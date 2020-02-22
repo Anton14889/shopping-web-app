@@ -4,6 +4,9 @@
             SHOPPING WEB APP
         </h1>
         <span class="example-spacer"></span>
+        <button mat-icon-button class='menu__icon favorite__icon m-sm-4' routerLink="/favorite">
+            <mat-icon matBadge="{{favoritSize}}" matBadgeColor="accent">favorite_border</mat-icon>
+        </button>
         <button mat-icon-button class='menu__icon m-sm-4' routerLink="/cart">
             <mat-icon matBadge="{{cartSize}}" matBadgeColor="accent">shopping_cart</mat-icon>
         </button>
@@ -14,73 +17,73 @@
 </mat-toolbar>
 
 <mat-drawer #drawer class="example-sidenav" [mode]="mode" [opened]='isOpen' (click)='close()'>
-    <mat-sidenav-container>
-        <div class="container pt-4 m d-flex justify-content-beetwen flex-wrap">
 
-            <div routerLink="/products" routerLinkActive #rlap="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlap.isActive else nonactivep'>
-                    Products
-                </button>
-                <ng-template #nonactivep>
-                    <button mat-raised-button color="primary">Products</button>
-                </ng-template>
-            </div>
+    <div class="container pt-4 m d-flex justify-content-beetwen flex-wrap">
 
-            <div routerLink="/favorite" routerLinkActive #rlaf="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlaf.isActive; else nonactivef' matBadge="{{favoritSize}}"
-                    matBadgePosition="after" matBadgeColor="accent">
-                    Favorite
-                </button>
-                <ng-template #nonactivef>
-                    <button mat-raised-button color="primary" matBadge="{{favoritSize}}" matBadgePosition="after"
-                        matBadgeColor="accent">Favorite</button>
-                </ng-template>
-            </div>
+        <div routerLink="/products" routerLinkActive #rlap="routerLinkActive">
+            <button mat-raised-button *ngIf='!rlap.isActive else nonactivep'>
+                Products
+            </button>
+            <ng-template #nonactivep>
+                <button mat-raised-button color="primary">Products</button>
+            </ng-template>
+        </div>
 
-            <div routerLink="/cart" routerLinkActive #rlac="routerLinkActive">
-                <button mat-raised-button *ngIf='!rlac.isActive; else nonactivec' matBadge="{{cartSize}}"
-                    matBadgePosition="after" matBadgeColor="accent">
+        <div routerLink="/favorite" routerLinkActive #rlaf="routerLinkActive">
+            <button mat-raised-button *ngIf='!rlaf.isActive; else nonactivef' matBadge="{{favoritSize}}"
+                matBadgePosition="after" matBadgeColor="accent">
+                Favorite
+            </button>
+            <ng-template #nonactivef>
+                <button mat-raised-button color="primary" matBadge="{{favoritSize}}" matBadgePosition="after"
+                    matBadgeColor="accent">Favorite</button>
+            </ng-template>
+        </div>
+
+        <div routerLink="/cart" routerLinkActive #rlac="routerLinkActive">
+            <button mat-raised-button *ngIf='!rlac.isActive; else nonactivec' matBadge="{{cartSize}}"
+                matBadgePosition="after" matBadgeColor="accent">
+                Cart
+            </button>
+            <ng-template #nonactivec>
+                <button mat-raised-button color="primary" matBadge="{{cartSize}}" matBadgePosition="after"
+                    matBadgeColor="accent">
                     Cart
                 </button>
-                <ng-template #nonactivec>
-                    <button mat-raised-button color="primary" matBadge="{{cartSize}}" matBadgePosition="after"
-                        matBadgeColor="accent">
-                        Cart
-                    </button>
-                </ng-template>
-            </div>
+            </ng-template>
+        </div>
 
-            <div routerLink="/{{routAdminUser}}" routerLinkActive #rlas="routerLinkActive">
-                <button mat-raised-button *ngIf=' !rlas.isActive; else nonactives' routerLinkActive="active">
+        <div routerLink="/{{routAdminUser}}" routerLinkActive #rlas="routerLinkActive">
+            <button mat-raised-button *ngIf=' !rlas.isActive; else nonactives' routerLinkActive="active">
+                <ng-container *ngIf='user?.email'>
+                    {{user?.email}}
+                </ng-container>
+                <ng-container *ngIf='!user?.email'>
+                    Sign In
+                </ng-container>
+
+            </button>
+            <ng-template #nonactives>
+                <button mat-raised-button color="primary">
                     <ng-container *ngIf='user?.email'>
                         {{user?.email}}
                     </ng-container>
                     <ng-container *ngIf='!user?.email'>
                         Sign In
                     </ng-container>
-
                 </button>
-                <ng-template #nonactives>
-                    <button mat-raised-button color="primary">
-                        <ng-container *ngIf='user?.email'>
-                            {{user?.email}}
-                        </ng-container>
-                        <ng-container *ngIf='!user?.email'>
-                            Sign In
-                        </ng-container>
-                    </button>
-                </ng-template>
-            </div>
-
-            <button mat-button class='menu__icon'>
-                Close menu
-                <mat-icon>
-                    close
-                </mat-icon>
-            </button>
-
+            </ng-template>
         </div>
-    </mat-sidenav-container>
+
+        <button mat-button class='menu__icon'>
+            Close menu
+            <mat-icon>
+                close
+            </mat-icon>
+        </button>
+
+    </div>
+    <mat-sidenav-container></mat-sidenav-container>
 </mat-drawer>
 
 

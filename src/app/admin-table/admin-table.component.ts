@@ -102,10 +102,8 @@ export class AdminTableComponent implements OnInit, OnDestroy {
       position: {
         'top': '15vh'
       }
-    }
-    );
+    });
     this.updateListAfterCloseDialog();
-
   }
 
   openInfo(e) {
@@ -126,7 +124,6 @@ export class AdminTableComponent implements OnInit, OnDestroy {
   }
 
   updateListAfterCloseDialog() {
-
     const dialog = this.dialog.afterAllClosed.subscribe(
       e => {
         this.dataServer = this.data.changeEmitted$

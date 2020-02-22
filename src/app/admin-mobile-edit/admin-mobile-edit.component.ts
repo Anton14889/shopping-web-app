@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dial
 import { UploadService } from '../upload-service/upload.service';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
 import { DataService } from '../services/data.service';
+import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 
 @Component({
   selector: 'app-admin-mobile-edit',
@@ -27,8 +28,8 @@ export class AdminMobileEditComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<AdminMobileEditComponent>,
     public dialog: MatDialog,
-    public uploadService: UploadService,
-    public dataService: DataService
+    // public uploadService: UploadService,
+    // public dataService: DataService
   ) {
 
     this.names = data.uniqueNames;
@@ -45,24 +46,32 @@ export class AdminMobileEditComponent {
         id: this.data.id,
         editButton: true,
       },
-      maxHeight: '100vh'
+      maxHeight: '80vh',
+      maxWidth: '95vw',
+      position: {
+        'top': '15vh'
+      }
     });
   }
 
   delete() {
-    this.uploadService.deleteItem(this.data.eventObj.name);
-    this.uploadService.deleteIMG(this.data.eventObj.img);
-    //если удалил тогда уникальное имя больше не уникально
-    this.uniqueNames(this.data.eventObj.name, false);
-    this.dataService.emitProduct(true);
-    this.closeDialog();
+    
+    this.dialog.open(ModalBuyComponent, {
+      data: {
+        name: this.data.eventObj.name,
+        message: 'delete',
+        button_message: 'Delete',
+        eventObj: this.data.eventObj,
+        id: this.data.id,
+        editButton: true,
+        adminDelete: true
+      },
+
+    });
   }
 
   closeDialog(): void {
     this.dialogRef.close();
-  }
-  uniqueNames(name, value) {
-    this.names[name] = value;
   }
 
 }

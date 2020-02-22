@@ -13,5 +13,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 :focus {
-  outline: none!important
+  outline: none!important;
+}
+
+.spinner {
+  height: 50vh;
 }

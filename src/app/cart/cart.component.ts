@@ -67,7 +67,9 @@ export class CartComponent implements OnInit {
   buy(data) {
     this.dialog.open(ModalBuyComponent, {
       data: {
-        name: data.name
+        name: data.name,
+        message: 'to buy',
+        button_message: 'Buy'
       }
     });
   }
