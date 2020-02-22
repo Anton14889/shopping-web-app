@@ -143,6 +143,11 @@ export class ModalDialogComponent {
   private editImage(data) {
     this.uploadService.deleteIMG(this.data.eventObj['img']);
     this.uploadService.addItem(this.name.value, data);
+
+    this.data.eventObj['name'] = data['name'];
+    this.data.eventObj['description'] = data['description'];
+    this.data.eventObj['price'] = data['price'];
+    
     this.upload(this.file.nativeElement.files[0]);
     return this.returnIMG(this.data.eventObj);
   }

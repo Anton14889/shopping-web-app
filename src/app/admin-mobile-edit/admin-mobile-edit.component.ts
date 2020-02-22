@@ -1,8 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
-import { UploadService } from '../upload-service/upload.service';
 import { ModalDialogComponent } from '../modal-dialog/modal-dialog.component';
-import { DataService } from '../services/data.service';
 import { ModalBuyComponent } from '../modal-buy/modal-buy.component';
 
 @Component({
@@ -28,10 +26,7 @@ export class AdminMobileEditComponent {
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<AdminMobileEditComponent>,
     public dialog: MatDialog,
-    // public uploadService: UploadService,
-    // public dataService: DataService
   ) {
-
     this.names = data.uniqueNames;
   }
 
