@@ -68,7 +68,9 @@ export class FavoriteComponent implements OnInit, OnDestroy {
   buy(data) {
     this.dialog.open(ModalBuyComponent, {
       data: {
-        name: data.name
+        name: data.name,
+        message: 'to buy',
+        button_message: 'Buy'
       }
     });
   }
