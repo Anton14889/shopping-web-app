@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { delay, flatMap } from 'rxjs/operators';
 
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatSnackBarConfig } from '@angular/material';
 import { ToastrComponent } from '../toastr/toastr.component';
 import { DataService } from '../services/data.service';
 
@@ -72,9 +72,10 @@ export class FavoritesService {
         this.snackBar.openFromComponent(ToastrComponent, {
           data: `${name} deleted from favorites`
         });
-        this.favoritSize(userEmail)
+        this.favoritSize(userEmail);
+        this.data.deleteFavoritId(productName);
       }).catch(e => {
-        console.warn(e)
+        console.warn(e);
         alert('ERROR DELETE');
       })
   }
@@ -87,6 +88,9 @@ export class FavoritesService {
           let size;
           data.empty ? size = null : size = data.size;
           this.data.updateFavoritSize(size)
+          data.forEach( i => {
+            this.data.favoritId(i['id'])
+          })
         }
       )
   }

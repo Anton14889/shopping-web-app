@@ -32,6 +32,8 @@ import {MatCardModule} from '@angular/material/card';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatDialogModule, MAT_DIALOG_DEFAULT_OPTIONS} from '@angular/material/dialog';
 import {MatBadgeModule} from '@angular/material/badge';
+import {MatIconModule} from '@angular/material/icon';
+
 
 
 import { HostDirective } from './template-shared/host.directive';
@@ -97,7 +99,8 @@ import {MatSnackBarModule} from "@angular/material"
     MatSidenavModule,
     MatDialogModule,
     MatBadgeModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatIconModule
   ],
   providers: [AngularFirestore,
     {provide: MAT_DIALOG_DEFAULT_OPTIONS, useValue: {hasBackdrop: true}},

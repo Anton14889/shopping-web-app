@@ -1,15 +1,50 @@
- button {
-  width: 70%;
-  min-width: 200px;
+.container button {
+  width: 100%;
+  min-width: 150px;
 }
 .container div {
   width: 20%;
-  min-width: 220px;
   margin: auto;
   margin-bottom: 15px;
 }
+
 .line-container {
   max-width: 1250px;
   margin: 0 auto;
   text-align: center;
+}
+
+.example-sidenav {
+  width: 100%;
+  position: relative;
+}
+.example-spacer {
+  flex: 1 1 auto;
+}
+.menu__icon {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .example-sidenav {
+    width: 250px;
+    height: inherit;
+    /* top: 64px; */
+    position: absolute;
+  }
+
+  .container div {
+    width: 100%;
+  }
+
+  .menu__icon {
+    display: block;
+  }
+
+}
+@media screen and (max-width: 599px) {
+  .example-sidenav {
+    /* top: 56px; */
+  }
+
 }

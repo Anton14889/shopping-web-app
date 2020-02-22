@@ -11,6 +11,11 @@ export class CardComponent {
 @Input() button_Left;
 @Input() button_Right;
 @Input() close_Button;
+
+@Input() id;
+@Input() idText;
+@Output() idEvent = new EventEmitter();
+
 @Output() buttonLeft = new EventEmitter();
 @Output() buttonRight = new EventEmitter();
 @Output() closeButton = new EventEmitter();
@@ -23,6 +28,9 @@ clickRight(val) {
 }
 clickCloseButton(val) {
   this.closeButton.emit(val);
+}
+clickIdEvent(val) {
+  this.idEvent.emit(val);
 }
 
 }

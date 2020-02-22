@@ -10,3 +10,8 @@ img {
 .card__header {
   line-height: 50px;
 }
+.favorite {
+  position: absolute;
+  right: 20px;
+  top: 25px;
+}

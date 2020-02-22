@@ -31,7 +31,19 @@ export class DataService {
   emitProduct(change: boolean) {
     this.data['product'] = change;
   }
+  private favoritsId = {};
 
+  favoritId(id) {
+    this.favoritsId[id] = true;
+    this.data['favoritsId'] = this.favoritsId;
+    this.emitChangeSource.next(this.data)
+  }
+
+  deleteFavoritId(id) {
+    this.favoritsId[id] = false;
+    this.data['favoritsId'] = this.favoritsId;
+    this.emitChangeSource.next(this.data)
+  }
 
 
 

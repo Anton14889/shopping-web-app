@@ -33,6 +33,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     private cartService: CartService,
     private favoritesService: FavoritesService,
     private data: DataService,
+    private favoritService: FavoritesService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
@@ -45,7 +46,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
- 
+ id;
 
   ngOnInit() {
     if (document.documentElement.clientWidth <= 576) {
@@ -57,8 +58,10 @@ export class ProductsComponent implements OnInit, OnDestroy {
         if (this.user.email != dataServer['email']) {
           this.user.email = dataServer.email;
         }
+        this.id = dataServer['favoritsId'];
       })
     this.allList()
+
   }
 
   ngOnDestroy(): void {
@@ -73,6 +76,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
     };
     this.favoritesService.addItem(this.user.email, `${data.id}`, favorites);
   }
+  deleteFavorites(data) {
+    this.favoritService.deleteItem(this.user.email,`${data.id}`, data.name);
+  }
 
   addCart(data) {
     let cart = {
@@ -83,7 +89,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
   }
 
   byMinPrice() {
-    this.result.sort(function (a, b) {
+    this.searchArr.sort(function (a, b) {
       return b.price - a.price
     })
     if (document.documentElement.clientWidth <= 576) {
@@ -91,7 +97,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     }
   }
   byMaxPrice() {
-    this.result.sort(function (a, b) {
+    this.searchArr.sort(function (a, b) {
       return a.price - b.price
     })
     if (document.documentElement.clientWidth <= 576) {
@@ -160,10 +166,16 @@ export class ProductsComponent implements OnInit, OnDestroy {
                   this.spinner = false;
                 }
               )
+
           })
+
+          
 
         }, e => console.warn("tableList error")
       )
   }
+
+
+
 
 }

@@ -62,7 +62,7 @@ export class FavoriteComponent implements OnInit, OnDestroy {
 
   delete(data, i) {
     this.result.splice(i, 1);
-    this.favoritService.deleteItem(this.user.email, data.originalName, data.name);
+    this.favoritService.deleteItem(this.user.email, `${data.id}`, data.name);
   }
 
   buy(data) {
@@ -105,7 +105,6 @@ export class FavoriteComponent implements OnInit, OnDestroy {
                     .subscribe(
                       imgURL => {
                         dataObj = data.payload.doc.data();
-                        dataObj['originalName'] = doc.id;
                         dataObj['imgURL'] = imgURL;
                         result.push(dataObj)
                         this.spinner = false;

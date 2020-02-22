@@ -7,3 +7,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .error {
     color: rgba(204, 53, 53, 0.726);
   }
+
+.cdk-global-overlay-wrapper {
+  top: -50px;
+}
+
+:focus {
+  outline: none!important
+}
