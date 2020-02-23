@@ -1,9 +1,9 @@
 .card {
-    width: 270px;
-    max-width: 270px;
+    min-width: 270px;
+    max-width: 350px;
     margin: 0 auto 20px;
-}
-
+    height: 100%;
+  }
 .card.hide {
     max-width: 100%;
     min-width: 270px;
