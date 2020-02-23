@@ -1,5 +1,8 @@
 <mat-toolbar color="primary" class='text-center'>
     <mat-toolbar-row>
+        <button mat-icon-button (click)="drawer.toggle()" class='menu__icon mr-1'>
+            <mat-icon>menu</mat-icon>
+        </button>
         <h1 routerLink="/products">
             SHOPPING WEB APP
         </h1>
@@ -10,13 +13,11 @@
         <button mat-icon-button class='menu__icon m-sm-4' routerLink="/cart">
             <mat-icon matBadge="{{cartSize}}" matBadgeColor="accent">shopping_cart</mat-icon>
         </button>
-        <button mat-icon-button (click)="drawer.toggle()" class='menu__icon'>
-            <mat-icon>menu</mat-icon>
-        </button>
+       
     </mat-toolbar-row>
 </mat-toolbar>
 
-<mat-drawer #drawer class="example-sidenav" [mode]="mode" [opened]='isOpen' (click)='close()' position='end'>
+<mat-drawer #drawer class="example-sidenav" [mode]="mode" [opened]='isOpen' (click)='close()'>
 
     <div class="container pt-4 m d-flex justify-content-beetwen flex-wrap">
 

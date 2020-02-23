@@ -56,10 +56,15 @@ export class HeaderComponent implements OnInit {
   close() {
     if (this.width) {
       this.drawer.close();
+      document.documentElement.style.overflow = "auto";
     }
     
   }
 
+  open() {
+    this.drawer.open();
+    document.documentElement.style.overflow = "hidden";
+  }
 
 
 }
