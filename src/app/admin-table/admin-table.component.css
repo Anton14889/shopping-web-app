@@ -18,6 +18,7 @@ td.mat-cell:last-of-type, td.mat-footer-cell:last-of-type, th.mat-header-cell:la
 }
 table img {
   width: 50px;
+  padding: 5px;
 }
 
 .mobile__info {
