@@ -47,6 +47,7 @@ export class AppComponent implements OnInit {
   }
 
   auf() {
+
     this.afAuth.auth.onAuthStateChanged((user) => {
       if (user) {
         this.user.email = user.email;
@@ -58,10 +59,11 @@ export class AppComponent implements OnInit {
           emailVerified: user.emailVerified,
           phoneNumber: user.phoneNumber,
         }
+        this.data.clearId();
         this.ref.detectChanges();
         this.data.emitUser(this.user);
-        this.cartService.cartSize(this.user.email)
-        this.favoritesService.favoritSize(this.user.email)
+        this.cartService.cartSize(this.user.email);
+        this.favoritesService.favoritSize(this.user.email);
 
         this.afs.collection("admins").doc('eQbHkjgcwiGpCqwWHyzj').get().subscribe(
           data => {
@@ -71,8 +73,8 @@ export class AppComponent implements OnInit {
               this.routAdminUser = 'admin';
               this.user.isAdmin = true;
               setTimeout(() => {
-                this.navigate(['admin']);
-                // this.router.navigate(['products'])
+                // this.navigate(['admin']);
+                this.router.navigate(['products'])
               }, 0);
               return
             }
@@ -89,7 +91,10 @@ export class AppComponent implements OnInit {
           favoritSize: null,
           cartSize: null
         };
+        this.data.clearId();
         this.data.emitUser(this.user);
+        this.cartService.cartSize(this.user.email)
+        this.favoritesService.favoritSize(this.user.email)
 
         this.routAdminUser = 'sign-in';
         this.navigate(['products']);

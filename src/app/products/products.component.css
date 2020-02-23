@@ -1,14 +1,26 @@
 
 .search {
-  width: 200px;
+  width: 180px;
+  padding-right: 15px;
 }
+
+.search * {
+ display: block;
+}
+
+.search button:not(.clear) {
+  width: 90%;
+  margin-bottom: 20px;
+}
+
 .driver__container {
-  min-height: 300px;
+  min-height: 350px;
 }
- .card {
-  width: 270px;
-  max-width: 270px;
+.card {
+  min-width: 270px;
+  max-width: 350px;
   margin: 0 auto 20px;
+  height: 100%;
 }
 
 .card.hide {
@@ -16,4 +28,13 @@
   min-width: 270px;
   /* width: calc(100% - 330px); */
   visibility: hidden;
+}
+
+.button__mobile {
+  display: none;
+}
+@media screen and (max-width: 768px) {
+  .button__mobile {
+    display: block;
+  }
 }

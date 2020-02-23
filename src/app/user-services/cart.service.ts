@@ -44,6 +44,19 @@ export class CartService {
 
   addItem(userEmail: string, productName: string, objDescripton: DataDescripton) {
 
+    if (!userEmail) {
+      let cartObj = JSON.parse(localStorage.getItem('cart')) || {};
+      cartObj[+productName] = true;
+      localStorage.setItem('cart', JSON.stringify(cartObj));
+
+      this.snackBar.openFromComponent(ToastrComponent, {
+        data: `${objDescripton['name']} added to cart`
+      });
+
+      this.data.updateCartSize(Object.keys(cartObj).length);
+      return
+    }
+
     this.afs.collection(`usersData`)
       .doc(`${userEmail}`)
       .collection('cart')
@@ -57,18 +70,32 @@ export class CartService {
         }
         this.cartSize(userEmail)
       }).catch(e => {
-        console.warn(e)
-
-        if (!userEmail) {
-          alert('try register to add to cart')
-        } else {
-          alert('error add to cart')
-        }
-
+        console.warn(e);
+        alert('error add to cart');
       })
   }
 
   deleteItem(userEmail: string, productName: string, name: string) {
+
+    if (!userEmail) {
+      let cartObj = JSON.parse(localStorage.getItem('cart')) || {};
+      cartObj = JSON.parse(localStorage.getItem('cart'));
+      delete cartObj[productName];
+      localStorage.setItem('cart', JSON.stringify(cartObj));
+
+      this.snackBar.openFromComponent(ToastrComponent, {
+        data: `${name} deleted from cart`
+      });
+
+      if (Object.keys(cartObj).length == 0) {
+        this.data.updateCartSize(null);
+        return
+      }
+
+      this.data.updateCartSize(Object.keys(cartObj).length);
+      return
+    }
+
     this.afs.collection(`usersData`)
       .doc(`${userEmail}`)
       .collection('cart')
@@ -86,6 +113,19 @@ export class CartService {
   }
 
   cartSize(userEmail) {
+    if (!userEmail) {
+      let cartObj = JSON.parse(localStorage.getItem('cart')) || {};
+      cartObj = JSON.parse(localStorage.getItem('cart'));
+
+      if (Object.keys(cartObj).length == 0) {
+        this.data.updateCartSize(null);
+        return
+      }
+
+      this.data.updateCartSize(Object.keys(cartObj).length);
+      return
+    }
+
     this.tableList(userEmail)
       .subscribe(
         data => {

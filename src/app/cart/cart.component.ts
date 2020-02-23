@@ -34,18 +34,20 @@ export class CartComponent implements OnInit {
 
   ngOnInit() {
     this.dataServer = this.data.changeEmitted$
+      .pipe(
+        distinctUntilChanged()
+      )
       .subscribe(
         dataServer => {
           if (dataServer['email'] != this.user['email']) {
             this.user['email'] = dataServer['email'];
-            this.allList()
+            this.userList();
+          }
+          else if (this.user['email'] !== undefined) {
+            this.user['email'] = undefined;
+            this.noUserList();
           }
         });
-    try {
-      
-    } catch (error) {
-      console.warn('property not find')
-    }
   }
 
   ngOnDestroy(): void {
@@ -74,7 +76,57 @@ export class CartComponent implements OnInit {
     });
   }
 
-  private allList() {
+  private noUserList() {
+
+    let result = [];
+    let dataObj = {};
+
+    let fa = JSON.parse(localStorage.getItem('cart')) || {};
+
+    for (const key in fa) {
+      if (fa.hasOwnProperty(key)) {
+        const element = fa[key];
+        if (element) {
+          this.spinner = true;
+          this.cartList = this.cartService.searchById(+key)
+            .subscribe(
+              data => {
+
+                this.imgList = this.uploadService.downloadImage(data.payload.doc.data()['img'])
+                  .pipe(
+                    distinctUntilChanged()
+                  )
+                  .subscribe(
+                    imgURL => {
+                      dataObj = data.payload.doc.data();
+                      dataObj['imgURL'] = imgURL;
+                      result.push(dataObj)
+                      this.spinner = false;
+                    },
+                    error => {
+                      console.warn(error);
+                      dataObj = data.payload.doc.data();
+                      dataObj['imageError'] = 'error';
+                      result.push(dataObj)
+                      this.spinner = false;
+                    }
+                  )
+                this.spinner = false;
+                this.result = result;
+              }, e => {
+                this.spinner = false;
+                console.warn("tableList error")
+              }
+
+            )
+        }
+
+      }
+    }
+
+  }
+
+  private userList() {
     let result = [];
     let dataObj = {};
     this.spinner = true;

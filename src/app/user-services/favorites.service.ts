@@ -38,7 +38,23 @@ export class FavoritesService {
       )
   }
 
+
   addItem(userEmail: string, productName: string, objDescripton: DataDescripton) {
+    if (!userEmail) {
+      let favoritObj = JSON.parse(localStorage.getItem('favorites')) || {};
+
+      favoritObj[+productName] = true;
+      localStorage.setItem('favorites', JSON.stringify(favoritObj));
+
+      this.snackBar.openFromComponent(ToastrComponent, {
+        data: `${objDescripton['name']} added to favorites`
+      });
+
+      this.data.updateFavoritSize(Object.keys(favoritObj).length);
+
+      this.data.favoritId(+productName);
+      return
+    }
 
     this.afs.collection(`usersData`)
       .doc(`${userEmail}`)
@@ -54,15 +70,32 @@ export class FavoritesService {
         this.favoritSize(userEmail);
       }).catch(e => {
         console.warn(e);
-        if (!userEmail) {
-          alert('try register to add to favorites')
-        } else {
-          alert('error add to favorites')
-        }
+        alert('error add to cart');
       })
   }
 
   deleteItem(userEmail: string, productName: string, name: string) {
+
+    if (!userEmail) {
+      let favoritObj = JSON.parse(localStorage.getItem('favorites')) || {};
+
+      delete favoritObj[productName];
+      localStorage.setItem('favorites', JSON.stringify(favoritObj));
+
+      this.snackBar.openFromComponent(ToastrComponent, {
+        data: `${name} deleted from favorites`
+      });
+
+      this.data.deleteFavoritId(productName);
+      if (Object.keys(favoritObj).length == 0) {
+        this.data.updateFavoritSize(null);
+        return
+      }
+
+      this.data.updateFavoritSize(Object.keys(favoritObj).length);
+      return
+    }
+
     this.afs.collection(`usersData`)
       .doc(`${userEmail}`)
       .collection('favorites')
@@ -82,13 +115,31 @@ export class FavoritesService {
 
   favoritSize(userEmail) {
 
+    if (!userEmail) {
+      let favoritObj = JSON.parse(localStorage.getItem('favorites')) || {};
+
+      for (const key in favoritObj) {
+        if (favoritObj.hasOwnProperty(key)) {
+          this.data.favoritId(+key)
+        }
+      }
+
+      if (Object.keys(favoritObj).length == 0) {
+        this.data.updateFavoritSize(null);
+        return
+      }
+
+      this.data.updateFavoritSize(Object.keys(favoritObj).length);
+      return
+    }
+
     this.tableList(userEmail)
       .subscribe(
         data => {
           let size;
           data.empty ? size = null : size = data.size;
           this.data.updateFavoritSize(size)
-          data.forEach( i => {
+          data.forEach(i => {
             this.data.favoritId(i['id'])
           })
         }

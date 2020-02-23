@@ -45,6 +45,9 @@ export class DataService {
     this.emitChangeSource.next(this.data)
   }
 
+  clearId() {
+    this.favoritsId = {};
+  }
 
 
 

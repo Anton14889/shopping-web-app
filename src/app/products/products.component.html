@@ -1,15 +1,31 @@
 <div class="container mb-5">
 
-  <button mat-stroked-button (click)="isOpen = !isOpen" class='mb-3'>{{isOpen ? 'Hide filter' : 'Open filter'}}</button>
+  <div class="d-flex justify-content-between">
+    <button mat-stroked-button (click)="isOpen = !isOpen"
+      class='mb-3'>{{isOpen ? 'Hide filter' : 'Open filter'}}</button>
+    <div>
+      <button mat-button (click)="byMaxPrice()" class='mr-1'>Low price</button>
+      <button mat-button (click)="byMinPrice()">High price</button>
+    </div>
+  </div>
 
   <mat-sidenav-container class="driver__container" (backdropClick)="isOpen = !isOpen">
-    <mat-sidenav [mode]="mode" [opened]='isOpen' #sidenav autoFocus='false'>
-
+    <mat-sidenav class='mat__sidenav' [mode]="mode" [opened]='isOpen' #sidenav autoFocus='false'>
       <div class='search'>
         <mat-form-field appearance="legacy">
           <mat-label>Search by name</mat-label>
-          <input matInput #inp (input)='search(inp.value)'>
+          <input matInput type="text" #inp (input)='search(inp.value)'>
+
+          <button mat-button *ngIf="inp.value" matSuffix mat-icon-button aria-label="Clear" class='clear'
+            (click)="[inp.value='', search(inp.value)]">
+            <mat-icon>close</mat-icon>
+          </button>
+
         </mat-form-field>
+        <button mat-stroked-button (click)='isOpen = !isOpen' class='button__mobile'>
+          Search
+        </button>
+
       </div>
       <div class='search'>
         <mat-form-field appearance="legacy">
@@ -22,17 +38,16 @@
           <mat-label>Maximum price</mat-label>
           <input matInput #inpPriceMax (input)='searchByPrice(inpPriceMin.value, inpPriceMax.value)' value="99999">
         </mat-form-field>
-      </div>
-      <div class="search">
-        <button mat-stroked-button (click)="byMaxPrice()">Low price</button>
-        <br>
-        <button mat-stroked-button (click)="byMinPrice()" class='mt-3'>High price</button>
+        <button mat-stroked-button (click)='isOpen = !isOpen' class='button__mobile'>
+          Search
+        </button>
       </div>
 
 
     </mat-sidenav>
 
     <mat-sidenav-content>
+
       <div class="spinner d-flex justify-content-center align-items-center" *ngIf='spinner'>
         <mat-spinner diameter='50'></mat-spinner>
       </div>
@@ -40,9 +55,9 @@
       <div class="d-flex flex-wrap justify-content-sm-start justify-content-center">
 
         <div class="card" *ngFor='let data of searchArr'>
-          <app-card [data]='data' [button_Left]='"Add favorites"' [button_Right]='"Add cart"'
-          [id]='id' [idText] = '"Delete favorites"' (idEvent)="deleteFavorites(data)"
-            (buttonRight)='addCart(data)' (buttonLeft)='addFavorites(data)'></app-card>
+          <app-card [data]='data' [button_Left]='"Add favorites"' [button_Right]='"Add cart"' [id]='id'
+            [idText]='"Delete favorites"' (idEvent)="deleteFavorites(data)" (buttonRight)='addCart(data)'
+            (buttonLeft)='addFavorites(data)'></app-card>
         </div>
 
         <div class="card hide"></div>

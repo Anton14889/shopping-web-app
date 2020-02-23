@@ -37,31 +37,32 @@ export class ProductsComponent implements OnInit, OnDestroy {
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 576px)');
+    this.mobileQuery = media.matchMedia('(max-width: 768px)');
     this._mobileQueryListener = () => {
       this.isOpen = !this.isOpen;
       this.mode === 'over' ? this.mode = 'side' : this.mode = 'over';
-      changeDetectorRef.detectChanges()
+      changeDetectorRef.detectChanges();
     };
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
- id;
+  id;
 
   ngOnInit() {
-    if (document.documentElement.clientWidth <= 576) {
+    if (document.documentElement.clientWidth <= 768) {
       this.isOpen = false;
       this.mode = 'over';
     }
+
     this.dataServer = this.data.changeEmitted$.subscribe(
-      (dataServer: Data) => {
-        if (this.user.email != dataServer['email']) {
-          this.user.email = dataServer.email;
+      dataServer => {
+        if (dataServer['email'] != this.user['email']) {
+          this.user['email'] = dataServer['email'];
         }
         this.id = dataServer['favoritsId'];
       })
-    this.allList()
 
+    this.allList()
   }
 
   ngOnDestroy(): void {
@@ -77,7 +78,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.favoritesService.addItem(this.user.email, `${data.id}`, favorites);
   }
   deleteFavorites(data) {
-    this.favoritService.deleteItem(this.user.email,`${data.id}`, data.name);
+    this.favoritService.deleteItem(this.user.email, `${data.id}`, data.name);
   }
 
   addCart(data) {
@@ -92,17 +93,11 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.searchArr.sort(function (a, b) {
       return b.price - a.price
     })
-    if (document.documentElement.clientWidth <= 576) {
-      this.isOpen = false;
-    }
   }
   byMaxPrice() {
     this.searchArr.sort(function (a, b) {
       return a.price - b.price
     })
-    if (document.documentElement.clientWidth <= 576) {
-      this.isOpen = false;
-    }
   }
 
   searchByPrice(min, max) {
@@ -125,7 +120,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
     if (value) {
       for (let i = 0; i < this.result.length; i++) {
-        if (~this.result[i].name.indexOf(value)) {
+        if (~this.result[i].name.trim().toLowerCase().indexOf(value.trim().toLowerCase())) {
           searchArr.push(this.result[i])
         }
       }
@@ -169,7 +164,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
 
           })
 
-          
+
 
         }, e => console.warn("tableList error")
       )

@@ -24,7 +24,7 @@
             </span>
         </ng-container>
     </div>
-    <mat-card-content>
+    <mat-card-content class='card__content'>
         <p>
             {{data.description}}
         </p>
@@ -39,21 +39,21 @@
             <ng-container *ngIf='id[data.id]'>
                 <button mat-stroked-button (click)="clickIdEvent(data)">{{idText}}</button>
             </ng-container>
-
+    
             <ng-container *ngIf='!id[data.id]'>
                 <button mat-stroked-button (click)="clickLeft(data)">{{button_Left}}</button>
             </ng-container>
-
+    
         </ng-container>
-
+    
         <ng-container *ngIf='!id'>
             <button mat-stroked-button (click)="clickLeft(data)">{{button_Left}}</button>
         </ng-container>
-
+    
         <button mat-stroked-button (click)="clickRight(data)">{{button_Right}}</button>
         <ng-container *ngIf='close_Button'>
             <button mat-stroked-button (click)="clickCloseButton(data)">{{close_Button}}</button>
-        </ng-container>
+        </ng-container>    
     </mat-card-actions>
-
+    
 </mat-card>

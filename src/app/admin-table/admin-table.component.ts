@@ -29,11 +29,11 @@ export interface UserData {
 
 export class AdminTableComponent implements OnInit, OnDestroy {
 
-  displayedColumns: string[] = ['id', 'image', 'name', 'description', 'price', 'edit'];
+  displayedColumns: string[] = ['id', 'image', 'name', 'price', 'info/edit'];
   dataSource: MatTableDataSource<UserData>;
 
-  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   private id = -1;
   private names = {};
@@ -61,7 +61,7 @@ export class AdminTableComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource([]);
     this.mobileQuery = media.matchMedia('(max-width: 768px)');
     this.mobileQueryListener = () => {
-      this.displayedColumns.length === 4 ? this.displayedColumns = ['id', 'image', 'name', 'description', 'price', 'edit'] : this.displayedColumns = ['id', 'image', 'name', 'info/edit'];
+      this.displayedColumns.length === 4 ? this.displayedColumns = ['id', 'image', 'name', 'price', 'info/edit'] : this.displayedColumns = ['id', 'image', 'name', 'info/edit'];
     };
     this.mobileQuery.addListener(this.mobileQueryListener);
   }
@@ -116,8 +116,9 @@ export class AdminTableComponent implements OnInit, OnDestroy {
         editButton: true,
       },
       maxWidth: '96vw',
+      maxHeight: '90vh',
       position: {
-        'top': '25vh'
+        'top': '10vh'
       }
     });
     this.updateListAfterCloseDialog()
@@ -151,7 +152,7 @@ export class AdminTableComponent implements OnInit, OnDestroy {
       .subscribe(
         data => {
           if (data.empty) {
-            this.dataSource = new MatTableDataSource([]);
+            this.dataSource.data = result;
             this.emptyData = data.empty;
           }
           data.forEach(doc => {
@@ -168,14 +169,18 @@ export class AdminTableComponent implements OnInit, OnDestroy {
                   objData['imgURL'] = imgURL;
                   result.push(objData)
                   this.dataSource = new MatTableDataSource(result);
+                  this.dataSource.paginator = this.paginator;
+
                   this.addProduct = false;
+
                 },
                 error => {
                   console.warn(error);
                   objData = doc.data();
                   objData['imageError'] = 'error';
                   result.push(objData)
-                  this.dataSource = new MatTableDataSource(result);
+
+                  this.dataSource.data = result;
                   this.addProduct = false;
                 }
               )
