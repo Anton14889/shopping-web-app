@@ -115,8 +115,7 @@ export class CartService {
   cartSize(userEmail) {
     if (!userEmail) {
       let cartObj = JSON.parse(localStorage.getItem('cart')) || {};
-      cartObj = JSON.parse(localStorage.getItem('cart'));
-
+    
       if (Object.keys(cartObj).length == 0) {
         this.data.updateCartSize(null);
         return

@@ -10,7 +10,6 @@ import { AdminMobileEditComponent } from '../admin-mobile-edit/admin-mobile-edit
 import { Subscription } from 'rxjs';
 import { DataService } from '../services/data.service';
 
-
 export interface UserData {
   id: string;
   name: string;
