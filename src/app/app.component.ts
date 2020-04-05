@@ -11,6 +11,7 @@ import { AuthService } from './auth/auth.service';
 import { Data } from './services/data.model';
 import { CartService } from './user-services/cart.service';
 import { FavoritesService } from './user-services/favorites.service';
+import { AuthGuard } from './auth/auth.guard';
 
 export interface Item { name: string; }
 
@@ -39,6 +40,7 @@ export class AppComponent implements OnInit {
     private router: Router,
     private cartService: CartService,
     private favoritesService: FavoritesService,
+    private authGuard: AuthGuard,
     private ngZone: NgZone
   ) { }
 
@@ -70,6 +72,7 @@ export class AppComponent implements OnInit {
 
             if (data.data()[this.user.email]) {
               this.auth.login(data.data()[this.user.email]);
+              this.authGuard.checkLogin('admin')
               this.routAdminUser = 'admin';
               this.user.isAdmin = true;
               setTimeout(() => {

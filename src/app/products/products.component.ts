@@ -5,7 +5,8 @@ import { DataService } from '../services/data.service';
 import { Data } from '../services/data.model';
 import { FavoritesService } from '../user-services/favorites.service';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { Subscription } from 'rxjs';
+import { Subscription, zip, range, timer, pipe } from 'rxjs';
+import { retryWhen, map, mergeMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-products',
@@ -138,9 +139,7 @@ export class ProductsComponent implements OnInit, OnDestroy {
     this.uploadService.tableList()
       .subscribe(
         data => {
-
           data.forEach(doc => {
-
             this.uploadService.downloadImage(doc.data()['img'])
               .subscribe(
                 imgURL => {
@@ -161,16 +160,9 @@ export class ProductsComponent implements OnInit, OnDestroy {
                   this.spinner = false;
                 }
               )
-
           })
-
-
-
         }, e => console.warn("tableList error")
       )
   }
-
-
-
 
 }
